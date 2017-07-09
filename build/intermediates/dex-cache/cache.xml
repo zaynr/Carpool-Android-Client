@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\3d3579f1d308c95f5997f72538517c68c4c71f86\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="47471eb19df288158b00b8d9cfa41bce7373f5cc">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_5b7d1b0dba0f829ecce1c7ca754405739b3bc276\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\0412810eea5d457f83641cf9b8abe85ef6cfa18f\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="9935891f23923f39d002087085d9696568a9f657">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_87ba92044917344f83e57819099e6d7eb28101a1\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.2\constraint-layout-solver-1.0.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\constraint-layout-solver-1.0.2_f32e36f9a14ca2ee60b32c2fa16d470ac5f9a4ad.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\13ee21bf3d2ae9c386367c30a6bd3102b2aa50c9\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="c4f45092eee6cdf1a5dbd597b2b6819be652ce2e">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_faeed1ae394bcc8175080584b55a2b0b865693a7.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\0412810eea5d457f83641cf9b8abe85ef6cfa18f\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="9935891f23923f39d002087085d9696568a9f657">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_87ba92044917344f83e57819099e6d7eb28101a1.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\b0faa4286e7f5ceb325097608685f148be444c71\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="2e92aa0163544a804a0b34f169ca61801770839a">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_f01603066207dcda89a6c0023f3f01670282a65d.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\d8891e43b92e69fa8a0de76835354bbc4c0a2b7c\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="fcd01fd11233459f546c437ec927e9b61bf7caf1">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_70a561a0f7e5e4bb6f351c0c302797b2ce18b7b6.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\cf805755b1cfcc770d42e9c96deb05ff291551be\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="8df0e365e40beb151bc42dee20817721a6cab7b0">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_d49350d731caa64cd379a82c274c85ac5090742d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\13ee21bf3d2ae9c386367c30a6bd3102b2aa50c9\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="c4f45092eee6cdf1a5dbd597b2b6819be652ce2e">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_faeed1ae394bcc8175080584b55a2b0b865693a7\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\cd46fc43dcffa667c13fbe8bd86fb4dd4bc76b6c\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_318c39e99803e4a32fd6c944d66d74a8c71ced5a\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\26707765377c1429955fa03f3ce4847c07cd7111\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="cddcd0fb93bc70e27325f2f715b2710332004ebb">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_7b7b3cbe880b020490fbdd9e2a2fe4778de4acc6\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\cf805755b1cfcc770d42e9c96deb05ff291551be\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="8df0e365e40beb151bc42dee20817721a6cab7b0">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_d49350d731caa64cd379a82c274c85ac5090742d.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\b3f1af5fdd0b74f4eaef05d7e580729bca4817ed\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="18d31838aa4fcc768a8a0516e22cc13b94655d89">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_cb0b98755831c8b66d9b0d9b59abf3ac065ea863\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\AppData\Local\Android\sdk\extras\m2repository\com\android\support\constraint\constraint-layout-solver\1.0.2\constraint-layout-solver-1.0.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\constraint-layout-solver-1.0.2_f32e36f9a14ca2ee60b32c2fa16d470ac5f9a4ad\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\d8891e43b92e69fa8a0de76835354bbc4c0a2b7c\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="fcd01fd11233459f546c437ec927e9b61bf7caf1">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_70a561a0f7e5e4bb6f351c0c302797b2ce18b7b6\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\b3f1af5fdd0b74f4eaef05d7e580729bca4817ed\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="18d31838aa4fcc768a8a0516e22cc13b94655d89">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_cb0b98755831c8b66d9b0d9b59abf3ac065ea863.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run_e3b0913d10faed182c2d09796331d162d6674478\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\17ac3ee69f9040691f898d1a238210babb5008cb\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_e43e14728248e4ddb9f34e65a00dd8a462c9700a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\26.0.0-alpha1\support-annotations-26.0.0-alpha1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="023ee503b631f69511e335a061ea008f8da60f40">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\support-annotations-26.0.0-alpha1_57027ec81b790b1c367cf98b41e31de2cea9d0ec.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\b0faa4286e7f5ceb325097608685f148be444c71\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="2e92aa0163544a804a0b34f169ca61801770839a">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_f01603066207dcda89a6c0023f3f01670282a65d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\26.0.0-alpha1\support-annotations-26.0.0-alpha1.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="023ee503b631f69511e335a061ea008f8da60f40">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\support-annotations-26.0.0-alpha1_57027ec81b790b1c367cf98b41e31de2cea9d0ec\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\17ac3ee69f9040691f898d1a238210babb5008cb\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_e43e14728248e4ddb9f34e65a00dd8a462c9700a\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\libs\httpmime-4.1.2.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="ed8b5ee0167cb27dea55851259eb34b609f31df0">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\2\httpmime-4.1.2_5858a0abc8f585532f28b0cf932a061f4ff09ea2\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\3d3579f1d308c95f5997f72538517c68c4c71f86\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="47471eb19df288158b00b8d9cfa41bce7373f5cc">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_5b7d1b0dba0f829ecce1c7ca754405739b3bc276.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\cecc101668f95b543a6814757d2e8d3bf96fccc2\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="6a022bf00ccd0948a8180c505e8e458bbddd43a6">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_8caf7feae520cb82867cfd7dd5f24e28b2ff6131.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\cecc101668f95b543a6814757d2e8d3bf96fccc2\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="6a022bf00ccd0948a8180c505e8e458bbddd43a6">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_8caf7feae520cb82867cfd7dd5f24e28b2ff6131\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.gradle\caches\modules-2\files-2.1\org.mybatis\mybatis\3.4.4\31f6ee836efc0a69e07d44f71deb0b0b4fd0f0c4\mybatis-3.4.4.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="31f6ee836efc0a69e07d44f71deb0b0b4fd0f0c4">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\mybatis-3.4.4_5e1909b68a0ebddcdbc72337084b7532e299d9a7\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\d64d0d39381feebbcc48068b1cc7c24ec8327ea1\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="952944218ecedea1554a513dec0c14d570642843">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_fc25dd5c4440c004c292b20a8a06b719ce69b7cd.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\d64d0d39381feebbcc48068b1cc7c24ec8327ea1\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="952944218ecedea1554a513dec0c14d570642843">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_fc25dd5c4440c004c292b20a8a06b719ce69b7cd\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="e9b5fa1bc42645191f7a2d2d4a1742efdf714294">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10000\instant-run-bootstrap_19b6cc88fbe8ec42a71ce7a04c2b22c3681e6894\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\libs\BaiduLBS_Android.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="9dc258174f10c93199ce8654291b220e908dc50b">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\2\BaiduLBS_Android_d35bf6500c15b0af896a8840713216608019807d\classes.dex" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="C:\Users\zengzy19585\.android\build-cache\e2815ba5c391bc41585fb29a15cff2e87c34293c\output\jars\classes.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.0"
+        sha1="88246166d5afb106f532f6e6deae683c66b42c89">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\transforms\dex\debug\folders\1000\10\classes_2500fe5546b668ead1eeb6ef151ba3bcd87cfda6\classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\cd46fc43dcffa667c13fbe8bd86fb4dd4bc76b6c\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_318c39e99803e4a32fd6c944d66d74a8c71ced5a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\26707765377c1429955fa03f3ce4847c07cd7111\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="cddcd0fb93bc70e27325f2f715b2710332004ebb">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_7b7b3cbe880b020490fbdd9e2a2fe4778de4acc6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\zengzy19585\.android\build-cache\e2815ba5c391bc41585fb29a15cff2e87c34293c\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="88246166d5afb106f532f6e6deae683c66b42c89">
+        <dex dex="C:\Users\zengzy19585\AndroidStudioProjects\Carpool\app\build\intermediates\pre-dexed\debug\classes_2500fe5546b668ead1eeb6ef151ba3bcd87cfda6.jar" />
+    </item>
+
+</items>
