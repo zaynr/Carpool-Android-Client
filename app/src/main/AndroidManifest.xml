@@ -52,11 +52,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".account.AccountCenter" />
+        <activity android:name=".account.AccountCenter" />
         <activity
             android:name=".account.LoginActivity"
             android:label="@string/title_activity_login" />
+        <activity
+            android:name=".account.RegisterActivity"
+            android:label="@string/title_activity_register"/>
     </application>
 
 </manifest>

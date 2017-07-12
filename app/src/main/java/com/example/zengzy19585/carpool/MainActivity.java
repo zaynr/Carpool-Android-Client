@@ -38,6 +38,7 @@ import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private SharedPreferencesUtil userInfo;
+    private String userType, userStatus, userName;
 
     // 定位相关
     LocationClient mLocClient;
@@ -62,9 +63,9 @@ public class MainActivity extends AppCompatActivity
         TextView textView;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View view = navigationView.getHeaderView(0);
-        String userType = userInfo.getStringValue("userType");
-        String userStatus = userInfo.getStringValue("userStatus");
-        String userName = userInfo.getStringValue("userName");
+        userType = userInfo.getStringValue("userType");
+        userStatus = userInfo.getStringValue("userStatus");
+        userName = userInfo.getStringValue("userName");
         if(userType.equals("customer")){
             textView = view.findViewById(R.id.user_type);
             textView.setText("乘客");
@@ -76,7 +77,6 @@ public class MainActivity extends AppCompatActivity
             textView = view.findViewById(R.id.user_name);
             textView.setText(userName);
         }
-        Log.e("userInfo", userStatus);
     }
 
     @Override
@@ -109,9 +109,8 @@ public class MainActivity extends AppCompatActivity
 
         //获取地图控件引用
         mMapView = (MapView) findViewById(R.id.bmapView);
-        mMapView.showScaleControl(false);
-        // 地图初始化
-        mMapView = (MapView) findViewById(R.id.bmapView);
+        mMapView.showScaleControl(true);
+        mMapView.showZoomControls(false);
         mBaiduMap = mMapView.getMap();
         // 开启定位图层
         mBaiduMap.setMyLocationEnabled(true);
@@ -121,7 +120,7 @@ public class MainActivity extends AppCompatActivity
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(500);
+        option.setScanSpan(10);
         mLocClient.setLocOption(option);
         mLocClient.start();
 
