@@ -33,6 +33,6 @@ dependencies {
     compile 'com.android.support:support-v4:26.+'
     compile 'com.android.support:design:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'org.mybatis:mybatis:3.4.4'
+    compile 'com.loopj.android:android-async-http:1.4.9'
     testCompile 'junit:junit:4.12'
 }

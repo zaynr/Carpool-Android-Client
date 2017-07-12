@@ -1,9 +1,11 @@
 package com.example.zengzy19585.carpool;
 
+import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -29,19 +32,18 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.example.zengzy19585.carpool.account.LoginActivity;
+import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private SharedPreferencesUtil userInfo;
 
     // 定位相关
     LocationClient mLocClient;
     public MyLocationListenner myListener = new MyLocationListenner();
     private MyLocationConfiguration.LocationMode mCurrentMode;
     BitmapDescriptor mCurrentMarker;
-    private static final int accuracyCircleFillColor = 0xAAFFFF88;
-    private static final int accuracyCircleStrokeColor = 0xAA00FF00;
-    private SensorManager mSensorManager;
-    private Double lastX = 0.0;
     private int mCurrentDirection = 0;
     private double mCurrentLat = 0.0;
     private double mCurrentLon = 0.0;
@@ -51,18 +53,37 @@ public class MainActivity extends AppCompatActivity
     BaiduMap mBaiduMap;
 
     // UI相关
-    CompoundButton.OnCheckedChangeListener radioButtonListener;
-    Button requestLocButton;
     boolean isFirstLoc = true; // 是否首次定位
     private MyLocationData locData;
-    private float direction;
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        TextView textView;
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View view = navigationView.getHeaderView(0);
+        String userType = userInfo.getStringValue("userType");
+        String userStatus = userInfo.getStringValue("userStatus");
+        String userName = userInfo.getStringValue("userName");
+        if(userType.equals("customer")){
+            textView = view.findViewById(R.id.user_type);
+            textView.setText("乘客");
+        } else{
+            textView = view.findViewById(R.id.user_type);
+            textView.setText("司机");
+        }
+        if(userStatus.equals("loggedIn")){
+            textView = view.findViewById(R.id.user_name);
+            textView.setText(userName);
+        }
+        Log.e("userInfo", userStatus);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
-        //获取地图控件引用
-        mMapView = (MapView) findViewById(R.id.bmapView);
+        userInfo = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -86,7 +107,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //loclate
+        //获取地图控件引用
+        mMapView = (MapView) findViewById(R.id.bmapView);
+        mMapView.showScaleControl(false);
         // 地图初始化
         mMapView = (MapView) findViewById(R.id.bmapView);
         mBaiduMap = mMapView.getMap();
@@ -98,17 +121,16 @@ public class MainActivity extends AppCompatActivity
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(1000);
+        option.setScanSpan(500);
         mLocClient.setLocOption(option);
         mLocClient.start();
-        
-        mCurrentMode = MyLocationConfiguration.LocationMode.FOLLOWING;
+
+        mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;
         mBaiduMap.setMyLocationConfiguration(new MyLocationConfiguration(
                 mCurrentMode, true, mCurrentMarker));
         MapStatus.Builder builder = new MapStatus.Builder();
         builder.overlook(0);
         mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-
     }
 
     @Override
@@ -149,17 +171,17 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_account) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            onPause();
+        } else if (id == R.id.nav_appoint) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_friends) {
 
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
 
         }
 
