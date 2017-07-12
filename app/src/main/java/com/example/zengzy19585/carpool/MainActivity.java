@@ -33,6 +33,7 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.example.zengzy19585.carpool.account.LoginActivity;
+import com.example.zengzy19585.carpool.appoint.ImmediateCallActivity;
 import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 
 public class MainActivity extends AppCompatActivity
@@ -60,6 +61,11 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
+        setUserInfo();
+        startLocating();
+    }
+
+    public void setUserInfo(){
         TextView textView;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View view = navigationView.getHeaderView(0);
@@ -80,6 +86,13 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        mMapView.onPause();
+        mLocClient.stop();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SDKInitializer.initialize(getApplicationContext());
@@ -93,8 +106,9 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(getApplication(), ImmediateCallActivity.class);
+                startActivity(intent);
+                onPause();
             }
         });
 
@@ -120,8 +134,12 @@ public class MainActivity extends AppCompatActivity
         LocationClientOption option = new LocationClientOption();
         option.setOpenGps(true); // 打开gps
         option.setCoorType("bd09ll"); // 设置坐标类型
-        option.setScanSpan(10);
+        option.setScanSpan(2000);
         mLocClient.setLocOption(option);
+    }
+
+    public void startLocating(){
+        mMapView.onResume();
         mLocClient.start();
 
         mCurrentMode = MyLocationConfiguration.LocationMode.NORMAL;

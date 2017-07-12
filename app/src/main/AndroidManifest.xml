@@ -58,7 +58,9 @@
             android:label="@string/title_activity_login" />
         <activity
             android:name=".account.RegisterActivity"
-            android:label="@string/title_activity_register"/>
+            android:label="@string/title_activity_register" />
+        <activity android:name=".appoint.InstantAppointActivity" />
+        <activity android:name=".appoint.ImmediateCallActivity"/>
     </application>
 
 </manifest>
