@@ -68,7 +68,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_register);
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
 
@@ -84,7 +84,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
+        Button mEmailSignInButton = (Button) findViewById(R.id.register_redirect_button);
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -177,7 +177,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                     SharedPreferencesUtil(getApplicationContext(), "userInfo");
             if(loginType == 0) {
                 postDatas.put("userInfo[serial_number]", email);
-                String url = "http://23.83.250.227:8080/customer/post-customer-data-login.do";
+                String url = "http://23.83.250.227:8080/customer/post-customer-data.do";
                 mAuthTask.post(url, postDatas, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -205,7 +205,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
             else{
                 postDatas.put("userInfo[mobile_number]", email);
-                String url = "http://23.83.250.227:8080/driver/driver-login.do";
+                String url = "http://23.83.250.227:8080/driver/post-register-data.do";
                 mAuthTask.post(url, postDatas, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

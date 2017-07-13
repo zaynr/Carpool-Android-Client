@@ -97,6 +97,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
         });
 
+        Button reg = (Button) findViewById(R.id.register_redirect_button);
+        reg.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         final CheckBox mCheckBoxView = (CheckBox)findViewById(R.id.type_select);
         mCheckBoxView.setOnClickListener(new OnClickListener() {
             @Override
@@ -109,16 +119,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     layout.setHint("公司工号");
                     loginType = 0;
                 }
-            }
-        });
-
-        Button redirect = (Button) findViewById(R.id.register_redirect_button);
-        redirect.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-                startActivity(intent);
-                onPause();
             }
         });
 
@@ -201,11 +201,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         String res = new String(responseBody);
                         Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
-                        if (res.equals("success!")) {
+                        if (res.contains("success")) {
                             userInfo.setStringValue("userStatus", "loggedIn");
                             userInfo.setStringValue("userType", "customer");
-                            userInfo.setStringValue("userName", "恒生员工" + email);
-                            Intent intent = new Intent(getApplicationContext(), AccountCenter.class);
+                            userInfo.setStringValue("userName", email);
+                            Intent intent = new Intent(LoginActivity.this, AccountCenter.class);
                             startActivity(intent);
                             finish();
                         } else {
@@ -229,11 +229,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         String res = new String(responseBody);
                         Toast.makeText(getApplicationContext(), res, Toast.LENGTH_SHORT).show();
-                        if (res.equals("success!")) {
+                        if (res.contains("success")) {
                             userInfo.setStringValue("userStatus", "loggedIn");
                             userInfo.setStringValue("userType", "driver");
-                            userInfo.setStringValue("userName", "司机用户" + email);
-                            Intent intent = new Intent(getApplicationContext(), AccountCenter.class);
+                            userInfo.setStringValue("userName", email);
+                            Intent intent = new Intent(LoginActivity.this, AccountCenter.class);
                             startActivity(intent);
                             finish();
                         } else {

@@ -26,6 +26,7 @@ public class AccountCenter extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 userInfo.setStringValue("userStatus", "notLoggedIn");
+                userInfo.setStringValue("userName", "未登录");
                 userInfo.setStringValue("userType", "visitor");
                 finish();
             }

@@ -11,7 +11,7 @@
     <string name="prompt_email">公司工号</string>
     <string name="prompt_password">请输入密码</string>
     <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">登录</string>
+    <string name="action_sign_in_short">登 录</string>
     <string name="error_invalid_email">登录名非法</string>
     <string name="error_invalid_password">请输入密码</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -20,4 +20,5 @@
         completions."
     </string>
     <string name="title_activity_register">注册</string>
+    <string name="title_activity_friend_manage">FriendManageActivity</string>
 </resources>

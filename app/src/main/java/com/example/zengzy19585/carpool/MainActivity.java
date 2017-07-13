@@ -34,8 +34,10 @@ import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.example.zengzy19585.carpool.account.AccountCenter;
+import com.example.zengzy19585.carpool.account.FriendManageActivity;
 import com.example.zengzy19585.carpool.account.LoginActivity;
 import com.example.zengzy19585.carpool.appoint.ImmediateCallActivity;
+import com.example.zengzy19585.carpool.appoint.OrdersManageActivity;
 import com.example.zengzy19585.carpool.appoint.ReceivingOrdersActivity;
 import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 import com.loopj.android.http.AsyncHttpClient;
@@ -87,7 +89,7 @@ public class MainActivity extends AppCompatActivity
         }
         AsyncHttpClient client = new AsyncHttpClient();
         RequestParams params = new RequestParams();
-        params.put("mobile_number", userInfo.getStringValue("userName").substring(4));
+        params.put("mobile_number", userInfo.getStringValue("userName"));
         params.put("lat", String.valueOf(latLng.latitude));
         params.put("lng", String.valueOf(latLng.longitude));
         String url = "http://23.83.250.227:8080/driver//updating-driver-loc.do";
@@ -109,19 +111,24 @@ public class MainActivity extends AppCompatActivity
         View view = navigationView.getHeaderView(0);
         userType = userInfo.getStringValue("userType");
         userStatus = userInfo.getStringValue("userStatus");
-        userName = userInfo.getStringValue("userName");
         if(userType.equals("customer")){
+            userName = "恒生员工" + userInfo.getStringValue("userName");
             textView = view.findViewById(R.id.user_type);
             textView.setText("乘客");
+            textView = view.findViewById(R.id.user_name);
+            textView.setText(userName);
         } else if(userType.equals("driver")){
+            userName = "司机用户" + userInfo.getStringValue("userName");
             textView = view.findViewById(R.id.user_type);
             textView.setText("司机");
+            textView = view.findViewById(R.id.user_name);
+            textView.setText(userName);
         } else {
             textView = view.findViewById(R.id.user_type);
             textView.setText("访客");
+            textView = view.findViewById(R.id.user_name);
+            textView.setText(userName);
         }
-        textView = view.findViewById(R.id.user_name);
-        textView.setText(userName);
     }
 
     @Override
@@ -245,7 +252,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_account) {
-            if(userInfo.getStringValue("userStatus").equals("loggedIn")){
+            if(userInfo.getStringValue("userStatus").contains("loggedIn")){
                 Intent intent = new Intent(this, AccountCenter.class);
                 startActivity(intent);
                 onPause();
@@ -255,9 +262,13 @@ public class MainActivity extends AppCompatActivity
                 onPause();
             }
         } else if (id == R.id.nav_friends) {
-
+            Intent intent = new Intent(this, FriendManageActivity.class);
+            startActivity(intent);
+            onPause();
         } else if (id == R.id.nav_manage) {
-
+            Intent intent = new Intent(this, OrdersManageActivity.class);
+            startActivity(intent);
+            onPause();
         } else if (id == R.id.nav_share) {
             Intent it = new Intent(Intent.ACTION_SEND);
             it.putExtra(Intent.EXTRA_TEXT, "Zayn 的拼车 APP, 欢迎试用: git@github.com:zaynr/Carpool-Android-Client.git");

@@ -220,7 +220,7 @@ public class ImmediateCallActivity extends AppCompatActivity implements
                                 params.put("ori_lng", oriLatlng.longitude);
                                 params.put("des_lat", destLatlng.latitude);
                                 params.put("des_lng", destLatlng.longitude);
-                                params.put("call_serial", util.getStringValue("userName").substring(4));
+                                params.put("call_serial", util.getStringValue("userName"));
                                 params.put("call_type", 0);
                                 client.post(url, params, new AsyncHttpResponseHandler() {
                                     @Override
@@ -284,7 +284,7 @@ public class ImmediateCallActivity extends AppCompatActivity implements
             overlay.addToMap();
             overlay.zoomToSpan();
             MapStatus.Builder builder = new MapStatus.Builder();
-            builder.zoom(mBaiduMap.getMapStatus().zoom - 0.8f);
+            builder.zoom(mBaiduMap.getMapStatus().zoom - 0.5f);
             mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
         }
 
@@ -395,7 +395,7 @@ public class ImmediateCallActivity extends AppCompatActivity implements
                     params.put("ori_lng", oriLatlng.longitude);
                     params.put("des_lat", destLatlng.latitude);
                     params.put("des_lng", destLatlng.longitude);
-                    params.put("call_serial", util.getStringValue("userName").substring(4));
+                    params.put("call_serial", util.getStringValue("userName"));
                     params.put("apt_time", date.getTime());
                     params.put("call_type", "1");
                     client.post(url, params, new AsyncHttpResponseHandler() {
