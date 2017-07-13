@@ -2,10 +2,12 @@ package com.example.zengzy19585.carpool.appoint;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.zengzy19585.carpool.R;
+import com.example.zengzy19585.carpool.adapter.RecOrderListViewAdapter;
 import com.example.zengzy19585.carpool.entity.Orders;
 import com.example.zengzy19585.carpool.utils.GetDistanceUitl;
 import com.loopj.android.http.AsyncHttpClient;
@@ -24,16 +26,15 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receiving_orders);
-        setContentView(R.layout.activity_orders_manage);
-        ListView listView = (ListView)findViewById(R.id.order_list);
+        final ListView listView = (ListView)findViewById(R.id.order_list);
         AsyncHttpClient client = new AsyncHttpClient();
         String url = "http://23.83.250.227:8080/order/get-all-undone-order.do";
         client.post(url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try{
-                    JSONArray jsonArray = new JSONArray(responseBody);
                     ArrayList<Orders> orderses = new ArrayList<>();
+                    JSONArray jsonArray = new JSONArray(new String(responseBody));
                     for(int i = 0; i < jsonArray.length(); i++){
                         if(jsonArray.getJSONObject(i).getString("ori_lat")==null){
                             continue;
@@ -44,8 +45,9 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                         order.setDistance("2km");
                         order.setDestAddress("111");
                         order.setDestAddress("222");
-
+                        orderses.add(order);
                     }
+                    listView.setAdapter(new RecOrderListViewAdapter(orderses, getApplicationContext()));
                 } catch (Exception e){
                     e.printStackTrace();
                 }
