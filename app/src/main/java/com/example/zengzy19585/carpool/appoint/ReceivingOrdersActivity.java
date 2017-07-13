@@ -43,7 +43,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                         order.setAptTime(jsonArray.getJSONObject(i).getString("apt_time"));
                         order.setSerialNum(jsonArray.getJSONObject(i).getString("serial_num"));
                         order.setDistance("2km");
-                        order.setDestAddress("111");
+                        order.setOriAddress("111");
                         order.setDestAddress("222");
                         orderses.add(order);
                     }

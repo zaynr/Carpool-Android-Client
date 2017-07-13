@@ -31,12 +31,12 @@ public class RecOrderListViewAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return orders.size();
     }
 
     @Override
     public Object getItem(int i) {
-        return null;
+        return orders.get(i);
     }
 
     @Override
