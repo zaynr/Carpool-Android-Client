@@ -190,6 +190,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = new AsyncHttpClient();
             final SharedPreferencesUtil userInfo = new
                     SharedPreferencesUtil(getApplicationContext(), "userInfo");
+            userInfo.setStringValue("userType", "visitor");
+            userInfo.setStringValue("userStatus", "notLoggedIn");
+            userInfo.setStringValue("userName", "未登录");
             if(loginType == 0) {
                 postDatas.put("userInfo[serial_number]", email);
                 String url = "http://23.83.250.227:8080/customer/post-customer-data-login.do";
@@ -220,7 +223,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
             else{
                 postDatas.put("userInfo[mobile_number]", email);
-                String url = "http://23.83.250.227:8080/driver/driver-login.do";
+                String url = "http://23.83.250.227:8080/driver/post-driver-data-login.do";
                 mAuthTask.post(url, postDatas, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {

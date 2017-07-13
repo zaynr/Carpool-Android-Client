@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -32,9 +33,16 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.example.zengzy19585.carpool.account.AccountCenter;
 import com.example.zengzy19585.carpool.account.LoginActivity;
 import com.example.zengzy19585.carpool.appoint.ImmediateCallActivity;
+import com.example.zengzy19585.carpool.appoint.ReceivingOrdersActivity;
 import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import cz.msebera.android.httpclient.Header;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -65,6 +73,36 @@ public class MainActivity extends AppCompatActivity
         startLocating();
     }
 
+    private void getAndShowDriverLoc(){
+        if(userInfo.getStringValue("userType").equals("driver")){
+            return;
+        }
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+    }
+
+    private void updateDriverLoc(final LatLng latLng){
+        if(userInfo.getStringValue("userType").equals("customer")){
+            return;
+        }
+        AsyncHttpClient client = new AsyncHttpClient();
+        RequestParams params = new RequestParams();
+        params.put("mobile_number", userInfo.getStringValue("userName").substring(4));
+        params.put("lat", String.valueOf(latLng.latitude));
+        params.put("lng", String.valueOf(latLng.longitude));
+        String url = "http://23.83.250.227:8080/driver//updating-driver-loc.do";
+        client.post(url, params, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "同步位置失败！", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void setUserInfo(){
         TextView textView;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
@@ -75,14 +113,15 @@ public class MainActivity extends AppCompatActivity
         if(userType.equals("customer")){
             textView = view.findViewById(R.id.user_type);
             textView.setText("乘客");
-        } else{
+        } else if(userType.equals("driver")){
             textView = view.findViewById(R.id.user_type);
             textView.setText("司机");
+        } else {
+            textView = view.findViewById(R.id.user_type);
+            textView.setText("访客");
         }
-        if(userStatus.equals("loggedIn")){
-            textView = view.findViewById(R.id.user_name);
-            textView.setText(userName);
-        }
+        textView = view.findViewById(R.id.user_name);
+        textView.setText(userName);
     }
 
     @Override
@@ -106,9 +145,26 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplication(), ImmediateCallActivity.class);
-                startActivity(intent);
-                onPause();
+                if(userInfo.getStringValue("userType").equals("customer")) {
+                    Intent intent = new Intent(getApplication(), ImmediateCallActivity.class);
+                    intent.putExtra("curLat", mCurrentLat);
+                    intent.putExtra("curLng", mCurrentLon);
+                    startActivity(intent);
+                    onPause();
+                }
+                else if(userInfo.getStringValue("userType").equals("driver")) {
+                    Intent intent = new Intent(getApplication(), ReceivingOrdersActivity.class);
+                    intent.putExtra("curLat", mCurrentLat);
+                    intent.putExtra("curLng", mCurrentLon);
+                    startActivity(intent);
+                    onPause();
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "请先登录", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getApplication(), LoginActivity.class);
+                    startActivity(intent);
+                    onPause();
+                }
             }
         });
 
@@ -189,17 +245,24 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_account) {
-            Intent intent = new Intent(this, LoginActivity.class);
-            startActivity(intent);
-            onPause();
-        } else if (id == R.id.nav_appoint) {
-
+            if(userInfo.getStringValue("userStatus").equals("loggedIn")){
+                Intent intent = new Intent(this, AccountCenter.class);
+                startActivity(intent);
+                onPause();
+            } else{
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                onPause();
+            }
         } else if (id == R.id.nav_friends) {
 
         } else if (id == R.id.nav_manage) {
 
         } else if (id == R.id.nav_share) {
-
+            Intent it = new Intent(Intent.ACTION_SEND);
+            it.putExtra(Intent.EXTRA_TEXT, "Zayn 的拼车 APP, 欢迎试用: git@github.com:zaynr/Carpool-Android-Client.git");
+            it.setType("text/plain");
+            startActivity(Intent.createChooser(it, "分享给你的朋友"));
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -235,12 +298,11 @@ public class MainActivity extends AppCompatActivity
             mBaiduMap.setMyLocationData(locData);
             if (isFirstLoc) {
                 isFirstLoc = false;
-                LatLng ll = new LatLng(location.getLatitude(),
-                        location.getLongitude());
                 MapStatus.Builder builder = new MapStatus.Builder();
-                builder.target(ll).zoom(18.0f);
+                builder.target(new LatLng(mCurrentLat, mCurrentLon)).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
             }
+            updateDriverLoc(new LatLng(mCurrentLat, mCurrentLon));
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
