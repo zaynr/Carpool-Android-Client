@@ -63,10 +63,11 @@
         <activity android:name=".appoint.ImmediateCallActivity" />
         <activity android:name=".appoint.OrdersManageActivity" />
         <activity android:name=".appoint.ReceivingOrdersActivity" />
+        <activity android:name=".navigate.BNDemoGuideActivity" />
         <activity
             android:name=".account.FriendManageActivity"
             android:label="@string/title_activity_friend_manage"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -33,6 +33,7 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationConfiguration;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.navisdk.adapter.BNOuterLogUtil;
 import com.example.zengzy19585.carpool.account.AccountCenter;
 import com.example.zengzy19585.carpool.account.FriendManageActivity;
 import com.example.zengzy19585.carpool.account.LoginActivity;
