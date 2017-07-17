@@ -6,4 +6,11 @@
     android:layout_height="match_parent"
     tools:context="com.example.zengzy19585.carpool.appoint.OrdersManageActivity">
 
+    <ListView
+        android:id="@+id/order_list"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 </android.support.constraint.ConstraintLayout>

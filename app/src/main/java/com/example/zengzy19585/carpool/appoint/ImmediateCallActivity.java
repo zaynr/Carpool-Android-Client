@@ -211,6 +211,7 @@ public class ImmediateCallActivity extends AppCompatActivity implements
                         switch (position){
                             case 0:
                                 Date date = new Date();
+                                date.setHours(date.getHours()+12);
                                 AsyncHttpClient client = new AsyncHttpClient();
                                 RequestParams params = new RequestParams();
                                 SharedPreferencesUtil util = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
@@ -384,9 +385,8 @@ public class ImmediateCallActivity extends AppCompatActivity implements
                 @Override
                 public void onClick(View view) {
                     date = new Date(datePicker.getYear() - 1900, datePicker.getMonth()
-                            , datePicker.getDayOfMonth(), timePicker.getCurrentHour()
+                            , datePicker.getDayOfMonth(), timePicker.getCurrentHour() + 12
                             , timePicker.getCurrentMinute());
-                    Log.e("TIME", date.toString());
                     AsyncHttpClient client = new AsyncHttpClient();
                     RequestParams params = new RequestParams();
                     SharedPreferencesUtil util = new SharedPreferencesUtil(getApplicationContext(), "userInfo");

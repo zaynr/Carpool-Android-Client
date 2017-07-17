@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     tools:context="com.example.zengzy19585.carpool.account.AccountCenter">
 
-    <TextView
+    <EditText
         android:id="@+id/textView"
+        android:focusable="false"
         android:layout_width="93dp"
         android:layout_height="55dp"
         android:text="TextView"
@@ -22,8 +23,9 @@
         app:layout_constraintHorizontal_bias="0.97"
         app:layout_constraintVertical_bias="0.018" />
 
-    <TextView
+    <EditText
         android:id="@+id/textView2"
+        android:focusable="false"
         android:layout_width="333dp"
         android:layout_height="61dp"
         android:text="TextView"
@@ -38,8 +40,9 @@
         app:layout_constraintHorizontal_bias="0.771"
         app:layout_constraintVertical_bias="0.398" />
 
-    <TextView
+    <EditText
         android:id="@+id/textView3"
+        android:focusable="false"
         android:layout_width="333dp"
         android:layout_height="61dp"
         android:layout_marginBottom="8dp"
@@ -54,8 +57,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.617" />
 
-    <TextView
+    <EditText
         android:id="@+id/textView4"
+        android:focusable="false"
         android:layout_width="333dp"
         android:layout_height="61dp"
         android:layout_marginBottom="8dp"
@@ -70,8 +74,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.85" />
 
-    <TextView
+    <EditText
         android:id="@+id/textView5"
+        android:focusable="false"
         android:layout_width="333dp"
         android:layout_height="61dp"
         android:layout_marginBottom="8dp"
