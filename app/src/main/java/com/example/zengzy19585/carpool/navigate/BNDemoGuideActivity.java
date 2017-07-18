@@ -82,9 +82,10 @@ public class BNDemoGuideActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-			if(mBaiduNaviCommonModule != null) {
-				mBaiduNaviCommonModule.onDestroy();
-			}
+		if(mBaiduNaviCommonModule != null) {
+			mBaiduNaviCommonModule.onDestroy();
+		}
+
 	}
 
 	@Override

@@ -6,15 +6,15 @@
             android:id="@+id/nav_account"
             android:title="账户中心" />
         <item
-            android:id="@+id/nav_friends"
-            android:title="好友" />
-        <item
             android:id="@+id/nav_manage"
             android:title="订单" />
     </group>
 
     <item android:title="Communicate">
         <menu>
+            <item
+                android:id="@+id/nav_friends"
+                android:title="好友" />
             <item
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"

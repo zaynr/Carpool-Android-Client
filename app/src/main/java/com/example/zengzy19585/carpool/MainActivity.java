@@ -44,8 +44,12 @@ import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.PushAgent;
 
 import cz.msebera.android.httpclient.Header;
+
+import static anet.channel.util.Utils.context;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -109,6 +113,7 @@ public class MainActivity extends AppCompatActivity
     public void setUserInfo(){
         TextView textView;
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        Menu menu = navigationView.getMenu();
         View view = navigationView.getHeaderView(0);
         userType = userInfo.getStringValue("userType");
         userStatus = userInfo.getStringValue("userStatus");
@@ -118,12 +123,14 @@ public class MainActivity extends AppCompatActivity
             textView.setText("乘客");
             textView = view.findViewById(R.id.user_name);
             textView.setText(userName);
+            menu.findItem(R.id.nav_friends).setTitle("好友");
         } else if(userType.equals("driver")){
             userName = "司机用户" + userInfo.getStringValue("userName");
             textView = view.findViewById(R.id.user_type);
             textView.setText("司机");
             textView = view.findViewById(R.id.user_name);
             textView.setText(userName);
+            menu.findItem(R.id.nav_friends).setTitle("常客");
         } else {
             textView = view.findViewById(R.id.user_type);
             textView.setText("访客");
@@ -200,6 +207,23 @@ public class MainActivity extends AppCompatActivity
         option.setCoorType("bd09ll"); // 设置坐标类型
         option.setScanSpan(2000);
         mLocClient.setLocOption(option);
+
+        //init push service
+        PushAgent mPushAgent = PushAgent.getInstance(this);
+        //注册推送服务，每次调用register方法都会回调该接口
+        mPushAgent.register(new IUmengRegisterCallback() {
+
+            @Override
+            public void onSuccess(String deviceToken) {
+                Log.e("deviceToken", deviceToken);
+            }
+
+            @Override
+            public void onFailure(String s, String s1) {
+
+            }
+        });
+        mPushAgent.onAppStart();
     }
 
     public void startLocating(){
@@ -286,7 +310,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * 定位SDK监听函数
      */
-    public class MyLocationListenner implements BDLocationListener {
+    private class MyLocationListenner implements BDLocationListener {
 
         @Override
         public void onConnectHotSpotMessage(String s, int i) {

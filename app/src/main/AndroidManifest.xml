@@ -39,6 +39,15 @@
             android:process=":remote" />
 
         <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="596dbf40f29d9836ed00060a">
+        </meta-data>
+        <meta-data
+            android:name="UMENG_MESSAGE_SECRET"
+            android:value="1235286a713d60f70dfe88d4c9042ff5">
+        </meta-data>
+
+        <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="tno0xrzuKRknCau3EjGwFuKUSuFIn2ep" />
         //key:开发者申请的Key

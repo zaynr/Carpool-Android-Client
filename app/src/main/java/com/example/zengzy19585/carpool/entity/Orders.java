@@ -12,6 +12,15 @@ public class Orders {
     private String distance;
     private String aptTime;
     private LatLng start, end;
+    private String status;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
     public LatLng getStart() {
         return start;

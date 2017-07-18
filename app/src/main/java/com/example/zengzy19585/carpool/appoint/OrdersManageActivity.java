@@ -15,8 +15,10 @@ import com.example.zengzy19585.carpool.R;
 import com.example.zengzy19585.carpool.adapter.RecOrderListViewAdapter;
 import com.example.zengzy19585.carpool.entity.Orders;
 import com.example.zengzy19585.carpool.utils.GetDistanceUtil;
+import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,51 +27,60 @@ import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
-public class OrdersManageActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
+public class OrdersManageActivity extends AppCompatActivity{
 
-    private GeoCoder mSearch = null;
     private ArrayList<Orders> orders;
     private ArrayList<LatLng> points;
     private ListView listView;
-    private int index = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders_manage);
-        // 初始化搜索模块，注册事件监听
-        mSearch = GeoCoder.newInstance();
-        mSearch.setOnGetGeoCodeResultListener(this);
         listView = (ListView) findViewById(R.id.order_list);
         points = new ArrayList<>();
         orders = new ArrayList<>();
         AsyncHttpClient client = new AsyncHttpClient();
-        String url = "http://23.83.250.227:8080/order/get-all-undone-order.do";
-        client.post(url, null, new AsyncHttpResponseHandler() {
+        SharedPreferencesUtil preferencesUtil = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
+        String url;
+        RequestParams params = new RequestParams();
+        if(preferencesUtil.getStringValue("userType").contains("driver")) {
+            url = "http://23.83.250.227:8080/order/get-by-rec.do";
+            params.put("rec_mobile_num", preferencesUtil.getStringValue("userName"));
+        }
+        else{
+            url = "http://23.83.250.227:8080/order/get-by-call.do";
+            params.put("call_serial", preferencesUtil.getStringValue("userName"));
+        }
+        client.post(url, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
                     JSONArray jsonArray = new JSONArray(new String(responseBody));
                     for (int i = 0; i < jsonArray.length(); i++) {
-                        if (jsonArray.getJSONObject(i).getString("ori_lat") == null) {
+                        if (jsonArray.getJSONObject(i).getString("ori_lat") == null
+                                || jsonArray.getJSONObject(i).getString("ori_lng") == null) {
                             continue;
                         }
                         Orders order = new Orders();
+                        order.setOriAddress(jsonArray.getJSONObject(i).getString("ori_address"));
+                        order.setDestAddress(jsonArray.getJSONObject(i).getString("des_address"));
                         order.setAptTime(jsonArray.getJSONObject(i).getString("apt_time"));
                         order.setSerialNum(jsonArray.getJSONObject(i).getString("serial_num"));
-                        points.add(new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lat"))
-                                , Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lng"))));
-                        points.add(new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lat"))
-                                , Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lng"))));
+                        LatLng start = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lat"))
+                                , Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lng")));
+                        LatLng end = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lat"))
+                                , Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lng")));
+                        GetDistanceUtil util = new GetDistanceUtil(start, end);
+                        order.setStart(start);
+                        order.setEnd(end);
+                        order.setDistance(String.valueOf(util.getDistance()) + "米");
                         orders.add(order);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                if (points.size() != 0) {
-                    mSearch.reverseGeoCode(new ReverseGeoCodeOption()
-                            .location(points.get(0)));
-                }
+                listView.setAdapter(new RecOrderListViewAdapter(orders, getApplicationContext()));
             }
 
             @Override
@@ -79,25 +90,4 @@ public class OrdersManageActivity extends AppCompatActivity implements OnGetGeoC
         });
     }
 
-    @Override
-    public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
-    }
-
-    @Override
-    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
-        if (index % 2 == 0) {
-            orders.get(index / 2).setOriAddress(reverseGeoCodeResult.getSematicDescription());
-        } else {
-            orders.get(index / 2).setDestAddress(reverseGeoCodeResult.getSematicDescription());
-            GetDistanceUtil util = new GetDistanceUtil(points.get(index - 1), points.get(index));
-            orders.get(index / 2).setDistance(String.valueOf(util.getDistance()) + " m");
-        }
-        index++;
-        if (index == orders.size() * 2) {
-            listView.setAdapter(new RecOrderListViewAdapter(orders, getApplicationContext()));
-        } else {
-            mSearch.reverseGeoCode(new ReverseGeoCodeOption()
-                    .location(points.get(index)));
-        }
-    }
 }
