@@ -23,34 +23,18 @@ import com.example.zengzy19585.carpool.appoint.ReceivingOrdersActivity;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 诱导界面
- *
- * @author sunhao04
- *
- */
 public class BNDemoGuideActivity extends Activity {
 
 	private final String TAG = BNDemoGuideActivity.class.getName();
 	private BNRoutePlanNode mBNRoutePlanNode = null;
 	private BaiduNaviCommonModule mBaiduNaviCommonModule = null;
 
-	/*
-     * 对于导航模块有两种方式来实现发起导航。 1：使用通用接口来实现 2：使用传统接口来实现
-     *
-     */
-	// 是否使用通用接口
-	private boolean useCommonInterface = true;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		createHandler();
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-		}
 		View view = null;
-		if (useCommonInterface) {
 			//使用通用接口
 			mBaiduNaviCommonModule = NaviModuleFactory.getNaviModuleManager().getNaviCommonModule(
 					NaviModuleImpl.BNaviCommonModuleConstants.ROUTE_GUIDE_MODULE, this,
@@ -59,12 +43,6 @@ public class BNDemoGuideActivity extends Activity {
 				mBaiduNaviCommonModule.onCreate();
 				view = mBaiduNaviCommonModule.getView();
 			}
-
-		} else {
-			//使用传统接口
-			view = BNRouteGuideManager.getInstance().onCreate(this,mOnNavigationListener);
-		}
-
 
 		if (view != null) {
 			setContentView(view);
@@ -86,84 +64,54 @@ public class BNDemoGuideActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if(useCommonInterface) {
 			if(mBaiduNaviCommonModule != null) {
 				mBaiduNaviCommonModule.onResume();
 			}
-		} else {
-			BNRouteGuideManager.getInstance().onResume();
-		}
-
-
 
 	}
 
 	protected void onPause() {
 		super.onPause();
 
-		if(useCommonInterface) {
 			if(mBaiduNaviCommonModule != null) {
 				mBaiduNaviCommonModule.onPause();
 			}
-		} else {
-			BNRouteGuideManager.getInstance().onPause();
-		}
 
-	};
+	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if(useCommonInterface) {
 			if(mBaiduNaviCommonModule != null) {
 				mBaiduNaviCommonModule.onDestroy();
 			}
-		} else {
-			BNRouteGuideManager.getInstance().onDestroy();
-		}
-
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		if(useCommonInterface) {
 			if(mBaiduNaviCommonModule != null) {
 				mBaiduNaviCommonModule.onStop();
 			}
-		} else {
-			BNRouteGuideManager.getInstance().onStop();
-		}
-
 	}
 
 	@Override
 	public void onBackPressed() {
-		if(useCommonInterface) {
 			if(mBaiduNaviCommonModule != null) {
 				mBaiduNaviCommonModule.onBackPressed(true);
 			}
-		} else {
-			BNRouteGuideManager.getInstance().onBackPressed(false);
-		}
 	}
 
 	public void onConfigurationChanged(android.content.res.Configuration newConfig) {
 		super.onConfigurationChanged(newConfig);
-		if(useCommonInterface) {
 			if(mBaiduNaviCommonModule != null) {
 				mBaiduNaviCommonModule.onConfigurationChanged(newConfig);
 			}
-		} else {
-			BNRouteGuideManager.getInstance().onConfigurationChanged(newConfig);
-		}
-
-	};
+	}
 
 
 	@Override
 	public boolean onKeyDown(int keyCode, android.view.KeyEvent event) {
-		if(useCommonInterface) {
 			if(mBaiduNaviCommonModule != null) {
 				Bundle mBundle = new Bundle();
 				mBundle.putInt(RouteGuideModuleConstants.KEY_TYPE_KEYCODE, keyCode);
@@ -178,24 +126,19 @@ public class BNDemoGuideActivity extends Activity {
 					e.printStackTrace();
 				}
 			}
-		}
 		return super.onKeyDown(keyCode, event);
 	}
 	@Override
 	protected void onStart() {
 		super.onStart();
 		// TODO Auto-generated method stub
-		if(useCommonInterface) {
 			if(mBaiduNaviCommonModule != null) {
 				mBaiduNaviCommonModule.onStart();
 			}
-		} else {
-			BNRouteGuideManager.getInstance().onStart();
-		}
 	}
 	private void addCustomizedLayerItems() {
 		List<CustomizedLayerItem> items = new ArrayList<CustomizedLayerItem>();
-		CustomizedLayerItem item1 = null;
+		CustomizedLayerItem item1;
 		if (mBNRoutePlanNode != null) {
 			item1 = new CustomizedLayerItem(mBNRoutePlanNode.getLongitude(), mBNRoutePlanNode.getLatitude(),
 					mBNRoutePlanNode.getCoordinateType(), getResources().getDrawable(R.drawable.ic_menu_send),

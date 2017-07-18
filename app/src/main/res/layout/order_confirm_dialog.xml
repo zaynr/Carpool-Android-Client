@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/confirm_ori"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:text="起点位置:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/confirm_dis"
+        android:textSize="20sp"
+        android:layout_below="@id/confirm_ori"
+        android:layout_centerHorizontal="true"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="当前距起点:"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/confirm_action"
+            android:layout_below="@id/confirm_dis"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="确认接单"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/cancel_action"
+            android:layout_below="@id/confirm_dis"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:text="取消接单"
+            android:layout_toEndOf="@id/confirm_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+</RelativeLayout>

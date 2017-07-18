@@ -2,16 +2,12 @@ package com.example.zengzy19585.carpool.appoint;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -31,11 +27,14 @@ import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.Overlay;
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.search.core.PoiInfo;
 import com.baidu.mapapi.search.core.RouteLine;
 import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.poi.OnGetPoiSearchResultListener;
 import com.baidu.mapapi.search.poi.PoiCitySearchOption;
 import com.baidu.mapapi.search.poi.PoiDetailResult;
@@ -59,21 +58,20 @@ import com.baidu.mapapi.search.sug.SuggestionSearch;
 import com.baidu.mapapi.search.sug.SuggestionSearchOption;
 import com.example.zengzy19585.carpool.R;
 import com.example.zengzy19585.carpool.utils.DrivingRouteOverlay;
-import com.example.zengzy19585.carpool.utils.OverlayManager;
 import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
 public class ImmediateCallActivity extends AppCompatActivity implements
-        OnGetPoiSearchResultListener, OnGetSuggestionResultListener, OnGetRoutePlanResultListener {
+        OnGetPoiSearchResultListener, OnGetSuggestionResultListener, OnGetRoutePlanResultListener
+        , OnGetGeoCoderResultListener {
     private PoiSearch mPoiSearch = null;
     private SuggestionSearch mSuggestionSearch = null;
     private List<String> suggest;
@@ -81,6 +79,7 @@ public class ImmediateCallActivity extends AppCompatActivity implements
     private LatLng oriLatlng, destLatlng;
     private ArrayAdapter<String> sugAdapter = null;
     private RouteLine route = null;
+    private GeoCoder geoSearcher = null; // 搜索模块，也可去掉地图模块独立使用
     // 搜索相关
     private RoutePlanSearch mSearchRoute = null;    // 搜索模块，也可去掉地图模块独立使用
 
@@ -94,12 +93,17 @@ public class ImmediateCallActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_immediate_call);
         Intent intent = getIntent();
         oriLatlng = new LatLng(intent.getDoubleExtra("curLat", 0), intent.getDoubleExtra("curLng", 0));
-        // 初始化搜索模块，注册事件监听
+        // 初始化搜索模块，注册路径搜索事件监听
         mSearchRoute = RoutePlanSearch.newInstance();
         mSearchRoute.setOnGetRoutePlanResultListener(this);
-        // 初始化搜索模块，注册搜索事件监听
+        // 初始化搜索模块，注册POI搜索事件监听
         mPoiSearch = PoiSearch.newInstance();
         mPoiSearch.setOnGetPoiSearchResultListener(this);
+        // 初始化搜索模块，注册geocode事件监听
+        geoSearcher = GeoCoder.newInstance();
+        geoSearcher.setOnGetGeoCodeResultListener(this);
+        geoSearcher.reverseGeoCode(new ReverseGeoCodeOption()
+                .location(oriLatlng));
 
         // 初始化建议搜索模块，注册建议搜索事件监听
         mSuggestionSearch = SuggestionSearch.newInstance();
@@ -287,7 +291,7 @@ public class ImmediateCallActivity extends AppCompatActivity implements
             overlay.addToMap();
             overlay.zoomToSpan();
             MapStatus.Builder builder = new MapStatus.Builder();
-            builder.zoom(mBaiduMap.getMapStatus().zoom - 0.5f);
+            builder.zoom(mBaiduMap.getMapStatus().zoom - 0.2f);
             mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
         }
 
@@ -361,9 +365,19 @@ public class ImmediateCallActivity extends AppCompatActivity implements
 
     }
 
+    @Override
+    public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
+
+    }
+
+    @Override
+    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
+        oriAuto.setText(reverseGeoCodeResult.getSematicDescription());
+    }
+
     // 响应DLg中的List item 点击
     interface OnItemInDlgClickListener {
-        public void onItemClick(int position);
+        void onItemClick(int position);
     }
 
     private class TimePickDialog extends Dialog{
@@ -372,7 +386,7 @@ public class ImmediateCallActivity extends AppCompatActivity implements
         Button commitPick;
         Date date;
 
-        public TimePickDialog(Context context){
+        private TimePickDialog(Context context){
             super(context);
         }
 
@@ -423,7 +437,7 @@ public class ImmediateCallActivity extends AppCompatActivity implements
         ArrayAdapter<String> adapter;
         OnItemInDlgClickListener onItemInDlgClickListener;
 
-        public SelectTypeDialog(Context context) {
+        private SelectTypeDialog(Context context) {
             super(context);
             String[] option = {"立即叫车", "预约叫车"};
             adapter = new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, option);

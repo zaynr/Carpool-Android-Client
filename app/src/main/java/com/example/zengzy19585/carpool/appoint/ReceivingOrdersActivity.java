@@ -1,33 +1,33 @@
 package com.example.zengzy19585.carpool.appoint;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.search.geocode.GeoCodeResult;
-import com.baidu.mapapi.search.geocode.GeoCoder;
-import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.navisdk.adapter.BNCommonSettingParam;
 import com.baidu.navisdk.adapter.BNOuterLogUtil;
-import com.baidu.navisdk.adapter.BNOuterTTSPlayerCallback;
 import com.baidu.navisdk.adapter.BNRoutePlanNode;
 import com.baidu.navisdk.adapter.BNaviSettingManager;
 import com.baidu.navisdk.adapter.BaiduNaviManager;
-import com.baidu.navisdk.adapter.BaiduNaviManager.*;
+import com.baidu.navisdk.adapter.BaiduNaviManager.NaviInitListener;
+import com.baidu.navisdk.adapter.BaiduNaviManager.TTSPlayMsgType;
+import com.baidu.navisdk.adapter.BaiduNaviManager.TTSPlayStateListener;
 import com.example.zengzy19585.carpool.R;
 import com.example.zengzy19585.carpool.adapter.RecOrderListViewAdapter;
 import com.example.zengzy19585.carpool.entity.Orders;
@@ -46,11 +46,10 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class ReceivingOrdersActivity extends AppCompatActivity{
+public class ReceivingOrdersActivity extends AppCompatActivity {
 
     private ArrayList<Orders> orders;
     private ListView listView;
-    private int index = 0;
     //navi vars
     private static final String APP_FOLDER_NAME = "Carpool";
     private String mSDCardPath = null;
@@ -62,8 +61,11 @@ public class ReceivingOrdersActivity extends AppCompatActivity{
     private static final int authComRequestCode = 2;
     private boolean hasInitSuccess = false;
     private boolean hasRequestComAuth = false;
+    private int curIndex;
     private BNRoutePlanNode sNode = null;
     private BNRoutePlanNode eNode = null;
+    private BNRoutePlanNode curNode = null;
+    private SharedPreferencesUtil util;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +77,10 @@ public class ReceivingOrdersActivity extends AppCompatActivity{
             initNavi();
         }
         // 初始化搜索模块，注册事件监听
+        util = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
+        Intent intent = getIntent();
+        LatLng curLatLng = new LatLng(intent.getDoubleExtra("curLat", 0), intent.getDoubleExtra("curLng", 0));
+        curNode = new BNRoutePlanNode(curLatLng.longitude, curLatLng.latitude, null, null, BNRoutePlanNode.CoordinateType.WGS84);
         listView = (ListView) findViewById(R.id.order_list);
         orders = new ArrayList<>();
         AsyncHttpClient client = new AsyncHttpClient();
@@ -112,11 +118,14 @@ public class ReceivingOrdersActivity extends AppCompatActivity{
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                         //start navi
                         if (BaiduNaviManager.isNaviInited()) {
+                            curIndex = i;
                             sNode = new BNRoutePlanNode(orders.get(i).getStart().longitude, orders.get(i).getStart().latitude
                                     , null, null, BNRoutePlanNode.CoordinateType.WGS84);
                             eNode = new BNRoutePlanNode(orders.get(i).getEnd().longitude, orders.get(i).getEnd().latitude
                                     , null, null, BNRoutePlanNode.CoordinateType.WGS84);
-                            routeplanToNavi(BNRoutePlanNode.CoordinateType.WGS84);
+                            ConfirmOrder confirmOrder = new ConfirmOrder(ReceivingOrdersActivity.this);
+                            confirmOrder.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                            confirmOrder.show();
                         }
                     }
                 });
@@ -273,17 +282,19 @@ public class ReceivingOrdersActivity extends AppCompatActivity{
             }
 
         }
+
         if (sNode != null && eNode != null) {
-            List<BNRoutePlanNode> list = new ArrayList<BNRoutePlanNode>();
+            List<BNRoutePlanNode> list = new ArrayList<>();
+            list.add(curNode);
             list.add(sNode);
             list.add(eNode);
             BaiduNaviManager.getInstance().launchNavigator(this, list, 1, true, new ReceivingOrdersActivity.DemoRoutePlanListener(sNode));
         }
     }
 
-    public class DemoRoutePlanListener implements BaiduNaviManager.RoutePlanListener {
+    private class DemoRoutePlanListener implements BaiduNaviManager.RoutePlanListener {
         private BNRoutePlanNode mBNRoutePlanNode = null;
-        public DemoRoutePlanListener(BNRoutePlanNode node) {
+        private DemoRoutePlanListener(BNRoutePlanNode node) {
             mBNRoutePlanNode = node;
         }
         @Override
@@ -322,9 +333,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity{
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == authBaseRequestCode) {
             for (int ret : grantResults) {
-                if (ret == 0) {
-                    continue;
-                } else {
+                if (ret != 0) {
                     Toast.makeText(getApplicationContext(), "缺少导航基本的权限!", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -338,6 +347,58 @@ public class ReceivingOrdersActivity extends AppCompatActivity{
             }
             routeplanToNavi(mCoordinateType);
         }
+    }
 
+    private class ConfirmOrder extends Dialog{
+        private ConfirmOrder(@NonNull Context context) {
+            super(context);
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.order_confirm_dialog);
+            Button confirm, cancel;
+            TextView confirmOri, confirmDis;
+            confirmOri = findViewById(R.id.confirm_ori);
+            confirmDis = findViewById(R.id.confirm_dis);
+            confirmOri.setText(confirmOri.getText() + orders.get(curIndex).getOriAddress());
+            GetDistanceUtil distanceUtil = new GetDistanceUtil(new LatLng(curNode.getLatitude(), curNode.getLongitude())
+                    , new LatLng(sNode.getLatitude(), sNode.getLongitude()));
+            confirmDis.setText(confirmDis.getText() + String.valueOf(distanceUtil.getDistance()) + "米");
+            confirm = findViewById(R.id.confirm_action);
+            cancel = findViewById(R.id.cancel_action);
+            confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    RequestParams params = new RequestParams();
+                    params.put("serial_num", Integer.parseInt(orders.get(curIndex).getSerialNum()));
+                    params.put("rec_mobile_num", util.getStringValue("userName"));
+                    String url = "http://23.83.250.227:8080/order/confirm-order.do";
+                    client.post(url, params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            routeplanToNavi(BNRoutePlanNode.CoordinateType.WGS84);
+                            dismiss();
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
+                            dismiss();
+                        }
+                    });
+                }
+            });
+
+            cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    dismiss();
+                }
+            });
+        }
     }
 }
