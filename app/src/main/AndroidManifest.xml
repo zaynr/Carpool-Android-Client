@@ -59,11 +59,13 @@
         <activity
             android:name=".account.RegisterActivity"
             android:label="@string/title_activity_register" />
-        <activity android:name=".appoint.InstantAppointActivity" />
         <activity android:name=".appoint.ImmediateCallActivity" />
         <activity android:name=".appoint.OrdersManageActivity" />
         <activity android:name=".appoint.ReceivingOrdersActivity" />
-        <activity android:name=".navigate.BNDemoGuideActivity" />
+        <activity android:name=".navigate.BNDemoGuideActivity"
+            android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
+        </activity>
         <activity
             android:name=".account.FriendManageActivity"
             android:label="@string/title_activity_friend_manage"

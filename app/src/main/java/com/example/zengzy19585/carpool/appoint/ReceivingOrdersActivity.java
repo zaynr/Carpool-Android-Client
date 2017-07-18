@@ -10,13 +10,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.navisdk.adapter.BNCommonSettingParam;
 import com.baidu.navisdk.adapter.BNOuterLogUtil;
@@ -26,11 +29,16 @@ import com.baidu.navisdk.adapter.BNaviSettingManager;
 import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.baidu.navisdk.adapter.BaiduNaviManager.*;
 import com.example.zengzy19585.carpool.R;
+import com.example.zengzy19585.carpool.adapter.RecOrderListViewAdapter;
+import com.example.zengzy19585.carpool.entity.Orders;
 import com.example.zengzy19585.carpool.navigate.BNDemoGuideActivity;
+import com.example.zengzy19585.carpool.utils.GetDistanceUtil;
 import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -38,13 +46,11 @@ import java.util.List;
 
 import cz.msebera.android.httpclient.Header;
 
-public class ReceivingOrdersActivity extends AppCompatActivity implements OnGetGeoCoderResultListener {
+public class ReceivingOrdersActivity extends AppCompatActivity{
 
-    private GeoCoder mSearch = null;
-    private SharedPreferencesUtil preferencesUtil;
-    private LatLng oriLatLng, destLatLng;
-    private String oriAddress, destAddress;
-    private Button start, cancel;
+    private ArrayList<Orders> orders;
+    private ListView listView;
+    private int index = 0;
     //navi vars
     private static final String APP_FOLDER_NAME = "Carpool";
     private String mSDCardPath = null;
@@ -63,54 +69,64 @@ public class ReceivingOrdersActivity extends AppCompatActivity implements OnGetG
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receiving_orders);
-        preferencesUtil = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
         //init navi
         BNOuterLogUtil.setLogSwitcher(true);
         if (initDirs()) {
             initNavi();
-            start = (Button)findViewById(R.id.button);
-            cancel = (Button)findViewById(R.id.button2);
-            start.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View arg0) {
-                    if (BaiduNaviManager.isNaviInited()) {
-                        routeplanToNavi(BNRoutePlanNode.CoordinateType.WGS84);
-                    }
-                }
-            });
         }
         // 初始化搜索模块，注册事件监听
-        mSearch = GeoCoder.newInstance();
-        mSearch.setOnGetGeoCodeResultListener(this);
-        //get orders
-        getDispatchedOrder();
-    }
-
-    private void getDispatchedOrder(){
+        listView = (ListView) findViewById(R.id.order_list);
+        orders = new ArrayList<>();
         AsyncHttpClient client = new AsyncHttpClient();
-        String url = "http://23.83.250.227:8080/order/get-dispatched.do";
-        RequestParams params = new RequestParams();
-        params.put("rec_mobile_num", preferencesUtil.getStringValue("userName"));
-        client.post(url, params, new AsyncHttpResponseHandler() {
+        String url = "http://23.83.250.227:8080/order/get-all-undone-order.do";
+        client.post(url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
+                try {
+                    JSONArray jsonArray = new JSONArray(new String(responseBody));
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        if (jsonArray.getJSONObject(i).getString("ori_lat") == null) {
+                            continue;
+                        }
+                        Orders order = new Orders();
+                        order.setOriAddress(jsonArray.getJSONObject(i).getString("ori_address"));
+                        order.setDestAddress(jsonArray.getJSONObject(i).getString("des_address"));
+                        order.setAptTime(jsonArray.getJSONObject(i).getString("apt_time"));
+                        order.setSerialNum(jsonArray.getJSONObject(i).getString("serial_num"));
+                        LatLng start = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lat"))
+                                , Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lng")));
+                        LatLng end = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lat"))
+                                , Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lng")));
+                        GetDistanceUtil util = new GetDistanceUtil(start, end);
+                        order.setStart(start);
+                        order.setEnd(end);
+                        order.setDistance(String.valueOf(util.getDistance()) + "米");
+                        orders.add(order);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                listView.setAdapter(new RecOrderListViewAdapter(orders, getApplicationContext()));
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        //start navi
+                        if (BaiduNaviManager.isNaviInited()) {
+                            sNode = new BNRoutePlanNode(orders.get(i).getStart().longitude, orders.get(i).getStart().latitude
+                                    , null, null, BNRoutePlanNode.CoordinateType.WGS84);
+                            eNode = new BNRoutePlanNode(orders.get(i).getEnd().longitude, orders.get(i).getEnd().latitude
+                                    , null, null, BNRoutePlanNode.CoordinateType.WGS84);
+                            routeplanToNavi(BNRoutePlanNode.CoordinateType.WGS84);
+                        }
+                    }
+                });
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+                Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    public void onGetGeoCodeResult(GeoCodeResult geoCodeResult) {
-    }
-
-    @Override
-    public void onGetReverseGeoCodeResult(ReverseGeoCodeResult reverseGeoCodeResult) {
-
     }
 
     private boolean initDirs() {
@@ -257,8 +273,6 @@ public class ReceivingOrdersActivity extends AppCompatActivity implements OnGetG
             }
 
         }
-        sNode = new BNRoutePlanNode(116.30142, 40.05087, "百度大厦", null, coType);
-        eNode = new BNRoutePlanNode(116.39750, 39.90882, "北京天安门", null, coType);
         if (sNode != null && eNode != null) {
             List<BNRoutePlanNode> list = new ArrayList<BNRoutePlanNode>();
             list.add(sNode);

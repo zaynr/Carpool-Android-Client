@@ -217,6 +217,8 @@ public class ImmediateCallActivity extends AppCompatActivity implements
                                 SharedPreferencesUtil util = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
                                 String url = "http://23.83.250.227:8080/order/place-order.do";
                                 params.put("apt_time", date.getTime());
+                                params.put("ori_address", oriAuto.getText());
+                                params.put("des_address", destAuto.getText());
                                 params.put("ori_lat", oriLatlng.latitude);
                                 params.put("ori_lng", oriLatlng.longitude);
                                 params.put("des_lat", destLatlng.latitude);

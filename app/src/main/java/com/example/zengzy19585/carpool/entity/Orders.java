@@ -1,5 +1,7 @@
 package com.example.zengzy19585.carpool.entity;
 
+import com.baidu.mapapi.model.LatLng;
+
 /**
  * Created by zaynr on 2017/7/13.
  */
@@ -9,6 +11,23 @@ public class Orders {
     private String destAddress;
     private String distance;
     private String aptTime;
+    private LatLng start, end;
+
+    public LatLng getStart() {
+        return start;
+    }
+
+    public void setStart(LatLng start) {
+        this.start = start;
+    }
+
+    public LatLng getEnd() {
+        return end;
+    }
+
+    public void setEnd(LatLng end) {
+        this.end = end;
+    }
 
     public String getSerialNum() {
         return serialNum;
