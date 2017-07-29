@@ -210,12 +210,12 @@ public class MainActivity extends AppCompatActivity
 
         //init push service
         PushAgent mPushAgent = PushAgent.getInstance(this);
+        mPushAgent.onAppStart();
         //注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
 
             @Override
             public void onSuccess(String deviceToken) {
-                Log.e("deviceToken", deviceToken);
             }
 
             @Override
@@ -223,7 +223,6 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
-        mPushAgent.onAppStart();
     }
 
     public void startLocating(){

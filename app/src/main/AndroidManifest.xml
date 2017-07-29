@@ -32,6 +32,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:hardwareAccelerated="true"
         android:theme="@style/AppTheme">
         <service
             android:name="com.baidu.location.f"
@@ -40,12 +41,13 @@
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="596dbf40f29d9836ed00060a">
-        </meta-data>
+            android:value="596dbf40f29d9836ed00060a"/>
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="1235286a713d60f70dfe88d4c9042ff5">
-        </meta-data>
+            android:value="1235286a713d60f70dfe88d4c9042ff5"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="Hundsun" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
