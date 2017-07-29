@@ -31,6 +31,7 @@
         <Button
             android:id="@+id/confirm_action"
             android:layout_below="@id/confirm_dis"
+            android:layout_alignParentStart="true"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:text="确认接单"
@@ -39,10 +40,10 @@
         <Button
             android:id="@+id/cancel_action"
             android:layout_below="@id/confirm_dis"
+            android:layout_alignParentEnd="true"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:text="取消接单"
-            android:layout_toEndOf="@id/confirm_action"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

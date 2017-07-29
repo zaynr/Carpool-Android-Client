@@ -1,23 +1,33 @@
 package com.example.zengzy19585.carpool.account;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.mapapi.map.Text;
 import com.example.zengzy19585.carpool.R;
+import com.example.zengzy19585.carpool.utils.Md5Generator;
 import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import java.math.BigInteger;
+import java.security.MessageDigest;
+
 import cz.msebera.android.httpclient.Header;
 
 public class AccountCenter extends AppCompatActivity {
     private SharedPreferencesUtil userInfo;
+    private EditText name, sex, mobile_num;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,31 +37,32 @@ public class AccountCenter extends AppCompatActivity {
         final Button logOut = (Button) findViewById(R.id.log_out);
         final Button update = (Button) findViewById(R.id.update);
         final Button password = (Button) findViewById(R.id.password);
+        name = (EditText) findViewById(R.id.textView);
+        sex = (EditText) findViewById(R.id.textView3);
+        mobile_num = (EditText) findViewById(R.id.textView2);
         password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+                UpdatePasswordDialog dialog = new UpdatePasswordDialog(AccountCenter.this);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.show();
             }
         });
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EditText name, sex, mobile_num;
-                name = (EditText) findViewById(R.id.textView);
-                sex = (EditText) findViewById(R.id.textView3);
-                mobile_num = (EditText) findViewById(R.id.textView2);
-                boolean flag;
                 if(update.getText().toString().contains("更改")){
-                    flag = true;
+                    name.setFocusableInTouchMode(true);
+                    sex.setFocusableInTouchMode(true);
+                    mobile_num.setFocusableInTouchMode(true);
                     update.setText("提交");
                 }
                 else{
-                    flag = false;
+                    name.setFocusable(false);
+                    sex.setFocusable(false);
+                    mobile_num.setFocusable(false);
                     update.setText("更改基本信息");
                 }
-                name.setFocusableInTouchMode(flag);
-                sex.setFocusableInTouchMode(flag);
-                mobile_num.setFocusableInTouchMode(flag);
             }
         });
         logOut.setOnClickListener(new View.OnClickListener() {
@@ -97,6 +108,54 @@ public class AccountCenter extends AppCompatActivity {
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
 
+                }
+            });
+        }
+    }
+
+    private class UpdatePasswordDialog extends Dialog{
+
+        public UpdatePasswordDialog(@NonNull Context context) {
+            super(context);
+        }
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.update_password_dialog);
+            final EditText newPwd, oldPwd;
+            Button commit;
+            commit = findViewById(R.id.commit);
+            newPwd = findViewById(R.id.new_pwd);
+            oldPwd = findViewById(R.id.old_pwd);
+            commit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    String url = "http://23.83.250.227:8080/customer/update-password.do";
+                    RequestParams params = new RequestParams();
+                    params.put("new_pwd", Md5Generator.generate(newPwd.getText().toString()));
+                    params.put("old_pwd", Md5Generator.generate(oldPwd.getText().toString()));
+                    params.put("serial_num", userInfo.getStringValue("userName"));
+                    client.post(url, params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            if(new String(responseBody).contains("success")){
+                                dismiss();
+                            }
+                            else{
+                                Toast.makeText(getApplicationContext(), "原始密码错误"
+                                        , Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Toast.makeText(getApplicationContext(), "网络错误"
+                                    , Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
                 }
             });
         }
