@@ -411,6 +411,8 @@ public class ImmediateCallActivity extends AppCompatActivity implements
                     params.put("ori_lng", oriLatlng.longitude);
                     params.put("des_lat", destLatlng.latitude);
                     params.put("des_lng", destLatlng.longitude);
+                    params.put("ori_address", oriAuto.getText());
+                    params.put("des_address", destAuto.getText());
                     params.put("call_serial", util.getStringValue("userName"));
                     params.put("apt_time", date.getTime());
                     params.put("call_type", "1");

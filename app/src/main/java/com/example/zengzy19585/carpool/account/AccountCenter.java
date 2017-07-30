@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -141,6 +142,8 @@ public class AccountCenter extends AppCompatActivity {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             if(new String(responseBody).contains("success")){
+                                Toast.makeText(getApplicationContext(), "密码更改成功"
+                                        , Toast.LENGTH_SHORT).show();
                                 dismiss();
                             }
                             else{
@@ -153,7 +156,6 @@ public class AccountCenter extends AppCompatActivity {
                         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                             Toast.makeText(getApplicationContext(), "网络错误"
                                     , Toast.LENGTH_SHORT).show();
-
                         }
                     });
                 }
