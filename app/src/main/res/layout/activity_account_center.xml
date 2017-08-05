@@ -25,6 +25,7 @@
 
     <EditText
         android:id="@+id/textView2"
+        android:inputType="number"
         android:focusable="false"
         android:textSize="16sp"
         android:layout_width="240dp"

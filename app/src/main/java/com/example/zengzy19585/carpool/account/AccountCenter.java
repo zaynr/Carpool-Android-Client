@@ -57,7 +57,9 @@ public class AccountCenter extends AppCompatActivity {
                 if(update.getText().toString().contains("更改")){
                     name.setFocusableInTouchMode(true);
                     sex.setFocusableInTouchMode(true);
-                    mobile_num.setFocusableInTouchMode(true);
+                    if(userInfo.getStringValue("userType").equals("customer")) {
+                        mobile_num.setFocusableInTouchMode(true);
+                    }
                     update.setText("提交");
                 }
                 else{
@@ -65,25 +67,52 @@ public class AccountCenter extends AppCompatActivity {
                     sex.setFocusable(false);
                     mobile_num.setFocusable(false);
                     AsyncHttpClient client = new AsyncHttpClient();
-                    String url = "http://23.83.250.227:8080/customer/update-user-info.do";
-                    RequestParams params = new RequestParams();
-                    params.add("serial_num", userInfo.getStringValue("userName"));
-                    params.add("mobile_number", mobile_num.getText().toString());
-                    params.add("sex", sex.getText().toString());
-                    params.add("user_name", name.getText().toString());
-                    client.post(url, params, new AsyncHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            Toast.makeText(getApplicationContext(), "个人信息更新成功"
-                                    , Toast.LENGTH_SHORT).show();
-                        }
+                    String url = null;
+                    if(userInfo.getStringValue("userType").equals("customer")) {
+                        url = "http://23.83.250.227:8080/customer/update-user-info.do";
+                        RequestParams params = new RequestParams();
+                        params.add("serial_num", userInfo.getStringValue("userName"));
+                        params.add("mobile_number", mobile_num.getText().toString());
+                        params.add("sex", sex.getText().toString());
+                        params.add("user_name", name.getText().toString());
+                        client.post(url, params, new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                Toast.makeText(getApplicationContext(), "个人信息更新成功"
+                                        , Toast.LENGTH_SHORT).show();
+                            }
 
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                Toast.makeText(getApplicationContext(), "网络错误"
+                                        , Toast.LENGTH_SHORT).show();
 
-                        }
-                    });
-                    update.setText("更改基本信息");
+                            }
+                        });
+                        update.setText("更改基本信息");
+                    }
+                    else if(userInfo.getStringValue("userType").equals("driver")){
+                        url = "http://23.83.250.227:8080/driver/update-user-info.do";
+                        RequestParams params = new RequestParams();
+                        params.add("mobile_number", userInfo.getStringValue("userName"));
+                        params.add("car_plate", sex.getText().toString());
+                        params.add("driver_name", name.getText().toString());
+                        client.post(url, params, new AsyncHttpResponseHandler() {
+                            @Override
+                            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                                Toast.makeText(getApplicationContext(), "个人信息更新成功"
+                                        , Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                                Toast.makeText(getApplicationContext(), "网络错误"
+                                        , Toast.LENGTH_SHORT).show();
+
+                            }
+                        });
+                        update.setText("更改基本信息");
+                    }
                 }
             }
         });
@@ -127,16 +156,30 @@ public class AccountCenter extends AppCompatActivity {
             });
         }
         else if(userInfo.getStringValue("userType").equals("driver")) {
+            TextView view;
+            view = (TextView) findViewById(R.id.textView10);
+            view.setText("车牌号：");
+            view = (TextView) findViewById(R.id.textView8);
+            view.setText("评分：");
             params.put("mobile_number", userInfo.getStringValue("userName"));
             String url = "http://23.83.250.227:8080/driver/retrieve-driver-info.do";
             client.post(url, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
+                    try{
+                        JSONObject object = new JSONObject(new String(responseBody));
+                        name.setText(object.getString("driver_name"));
+                        sex.setText(object.getString("car_plate"));
+                        mobile_num.setText(object.getString("mobile_number"));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Toast.makeText(getApplicationContext(), "网络错误"
+                            , Toast.LENGTH_SHORT).show();
 
                 }
             });
@@ -162,11 +205,18 @@ public class AccountCenter extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     AsyncHttpClient client = new AsyncHttpClient();
-                    String url = "http://23.83.250.227:8080/customer/update-password.do";
+                    String url = null;
                     RequestParams params = new RequestParams();
                     params.put("new_pwd", Md5Generator.generate(newPwd.getText().toString()));
                     params.put("old_pwd", Md5Generator.generate(oldPwd.getText().toString()));
-                    params.put("serial_num", userInfo.getStringValue("userName"));
+                    if(userInfo.getStringValue("userType").equals("customer")) {
+                        url = "http://23.83.250.227:8080/customer/update-password.do";
+                        params.put("serial_num", userInfo.getStringValue("userName"));
+                    }
+                    else if(userInfo.getStringValue("userType").equals("driver")) {
+                        url = "http://23.83.250.227:8080/driver/update-password.do";
+                        params.put("mobile_number", userInfo.getStringValue("userName"));
+                    }
                     client.post(url, params, new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
