@@ -6,12 +6,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.zengzy19585.carpool.R;
+import com.example.zengzy19585.carpool.entity.Friends;
 import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import java.util.ArrayList;
 
 import cz.msebera.android.httpclient.Header;
 
@@ -27,18 +31,32 @@ public class FriendManageActivity extends AppCompatActivity {
         userInfo = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
 
         AsyncHttpClient client = new AsyncHttpClient();
-        String url = "http://23.83.250.227:8080/friend/show-friends.do";
+        String url;
         RequestParams params = new RequestParams();
-        params.put("userial1", userInfo.getStringValue("userName"));
+        if(userInfo.getStringValue("userType").contains("customer")) {
+            url = "http://23.83.250.227:8080/friend/show-friends.do";
+            params.put("userial1", userInfo.getStringValue("userName"));
+        }
+        else{
+            url = "http://23.83.250.227:8080/friend/get-driver-serve.do";
+            params.put("rec_mobile_num", userInfo.getStringValue("userName"));
+        }
+        ArrayList<Friends> friendses = new ArrayList<>();
         client.post(url, params, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                
+                Friends friends = new Friends();
+                if(userInfo.getStringValue("userType").contains("customer")) {
+
+                }
+                else{
+                    
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+                Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
             }
         });
 

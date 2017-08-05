@@ -98,6 +98,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                             continue;
                         }
                         Orders order = new Orders();
+                        order.setCallSerial(jsonArray.getJSONObject(i).getString("call_serial"));
                         order.setCustomerName(jsonArray.getJSONObject(i).getString("customer_name"));
                         order.setCustomerMobileNum(jsonArray.getJSONObject(i).getString("customer_mobile_number"));
                         order.setOriAddress(jsonArray.getJSONObject(i).getString("ori_address"));
@@ -423,11 +424,11 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     AsyncHttpClient client = new AsyncHttpClient();
-                    RequestParams params = new RequestParams();
-                    params.put("serial_num", Integer.parseInt(orders.get(curIndex).getSerialNum()));
-                    params.put("rec_mobile_num", util.getStringValue("userName"));
+                    RequestParams recOrder = new RequestParams();
+                    recOrder.put("serial_num", Integer.parseInt(orders.get(curIndex).getSerialNum()));
+                    recOrder.put("rec_mobile_num", util.getStringValue("userName"));
                     String url = "http://23.83.250.227:8080/order/confirm-order.do";
-                    client.post(url, params, new AsyncHttpResponseHandler() {
+                    client.post(url, recOrder, new AsyncHttpResponseHandler() {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             routeplanToNavi(BNRoutePlanNode.CoordinateType.WGS84);
@@ -439,6 +440,21 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                             Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
                             dismiss();
+                        }
+                    });
+                    String updateServe = "http://23.83.250.227:8080/friend/update-driver-serve.do";
+                    RequestParams updateServeParam = new RequestParams();
+                    updateServeParam.put("rec_mobile_num", util.getStringValue("userName"));
+                    updateServeParam.put("call_serial", orders.get(curIndex).getCallSerial());
+                    client.post(updateServe, updateServeParam, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }

@@ -12,7 +12,15 @@ public class Orders {
     private String distance;
     private String aptTime;
     private LatLng start, end;
-    private String status, customerName, customerMobileNum;
+    private String status, customerName, customerMobileNum, callSerial;
+
+    public String getCallSerial() {
+        return callSerial;
+    }
+
+    public void setCallSerial(String callSerial) {
+        this.callSerial = callSerial;
+    }
 
     public String getCustomerName() {
         return customerName;
