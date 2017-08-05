@@ -8,4 +8,16 @@
     tools:context="com.example.zengzy19585.carpool.account.FriendManageActivity"
     tools:showIn="@layout/activity_friend_manage">
 
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/friend_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ListView
+            android:id="@+id/friend_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
 </android.support.constraint.ConstraintLayout>
