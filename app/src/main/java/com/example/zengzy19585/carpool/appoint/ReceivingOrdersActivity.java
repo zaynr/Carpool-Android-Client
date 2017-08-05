@@ -10,6 +10,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
@@ -66,6 +67,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
     private BNRoutePlanNode eNode = null;
     private BNRoutePlanNode curNode = null;
     private SharedPreferencesUtil util;
+    private SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,8 +85,9 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
         curNode = new BNRoutePlanNode(curLatLng.longitude, curLatLng.latitude, null, null, BNRoutePlanNode.CoordinateType.WGS84);
         listView = (ListView) findViewById(R.id.order_list);
         orders = new ArrayList<>();
-        AsyncHttpClient client = new AsyncHttpClient();
-        String url = "http://23.83.250.227:8080/order/get-all-undone-order.do";
+        final AsyncHttpClient client = new AsyncHttpClient();
+        final String url = "http://23.83.250.227:8080/order/get-all-undone-order.do";
+        final RecOrderListViewAdapter adapter = new RecOrderListViewAdapter(orders, getApplicationContext());
         client.post(url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -114,7 +117,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                listView.setAdapter(new RecOrderListViewAdapter(orders, getApplicationContext()));
+                listView.setAdapter(adapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -136,6 +139,52 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
+            }
+        });
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                client.post(url, null, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        try {
+                            orders.clear();
+                            JSONArray jsonArray = new JSONArray(new String(responseBody));
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                if (jsonArray.getJSONObject(i).getString("ori_lat") == null) {
+                                    continue;
+                                }
+                                Orders order = new Orders();
+                                order.setCustomerName(jsonArray.getJSONObject(i).getString("customer_name"));
+                                order.setCustomerMobileNum(jsonArray.getJSONObject(i).getString("customer_mobile_number"));
+                                order.setOriAddress(jsonArray.getJSONObject(i).getString("ori_address"));
+                                order.setDestAddress(jsonArray.getJSONObject(i).getString("des_address"));
+                                order.setAptTime(jsonArray.getJSONObject(i).getString("apt_time"));
+                                order.setSerialNum(jsonArray.getJSONObject(i).getString("serial_num"));
+                                LatLng start = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lat"))
+                                        , Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lng")));
+                                LatLng end = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lat"))
+                                        , Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lng")));
+                                GetDistanceUtil util = new GetDistanceUtil(start, end);
+                                order.setStart(start);
+                                order.setEnd(end);
+                                order.setDistance(String.valueOf(util.getDistance()) + "米");
+                                orders.add(order);
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        adapter.notifyDataSetChanged();
+                        refreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
+                        refreshLayout.setRefreshing(false);
+                    }
+                });
             }
         });
     }
