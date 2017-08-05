@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -19,6 +20,8 @@ import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
+
+import org.json.JSONObject;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -61,6 +64,25 @@ public class AccountCenter extends AppCompatActivity {
                     name.setFocusable(false);
                     sex.setFocusable(false);
                     mobile_num.setFocusable(false);
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    String url = "http://23.83.250.227:8080/customer/update-user-info.do";
+                    RequestParams params = new RequestParams();
+                    params.add("serial_num", userInfo.getStringValue("userName"));
+                    params.add("mobile_number", mobile_num.getText().toString());
+                    params.add("sex", sex.getText().toString());
+                    params.add("user_name", name.getText().toString());
+                    client.post(url, params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            Toast.makeText(getApplicationContext(), "个人信息更新成功"
+                                    , Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+
+                        }
+                    });
                     update.setText("更改基本信息");
                 }
             }
@@ -87,12 +109,20 @@ public class AccountCenter extends AppCompatActivity {
             client.post(url, params, new AsyncHttpResponseHandler() {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-
+                    try{
+                        JSONObject object = new JSONObject(new String(responseBody));
+                        name.setText(object.getString("user_name"));
+                        sex.setText(object.getString("sex"));
+                        mobile_num.setText(object.getString("mobile_number"));
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override
                 public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-
+                    Toast.makeText(getApplicationContext(), "网络错误"
+                            , Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -141,6 +171,8 @@ public class AccountCenter extends AppCompatActivity {
                         @Override
                         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                             if(new String(responseBody).contains("success")){
+                                Toast.makeText(getApplicationContext(), "密码更改成功"
+                                        , Toast.LENGTH_SHORT).show();
                                 dismiss();
                             }
                             else{
@@ -153,7 +185,6 @@ public class AccountCenter extends AppCompatActivity {
                         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                             Toast.makeText(getApplicationContext(), "网络错误"
                                     , Toast.LENGTH_SHORT).show();
-
                         }
                     });
                 }
