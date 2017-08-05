@@ -66,6 +66,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:text="更改基本信息"
+        android:background="@drawable/bt_red_ring"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -82,6 +83,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:text="更改密码"
+        android:background="@drawable/bt_red_ring"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.038"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -93,6 +95,7 @@
     <Button
         android:id="@+id/log_out"
         android:layout_width="match_parent"
+        android:background="@drawable/bt_red_ring"
         android:layout_height="40dp"
         android:layout_marginBottom="8dp"
         android:layout_marginLeft="16dp"

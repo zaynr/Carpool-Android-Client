@@ -95,6 +95,8 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                             continue;
                         }
                         Orders order = new Orders();
+                        order.setCustomerName(jsonArray.getJSONObject(i).getString("customer_name"));
+                        order.setCustomerMobileNum(jsonArray.getJSONObject(i).getString("customer_mobile_number"));
                         order.setOriAddress(jsonArray.getJSONObject(i).getString("ori_address"));
                         order.setDestAddress(jsonArray.getJSONObject(i).getString("des_address"));
                         order.setAptTime(jsonArray.getJSONObject(i).getString("apt_time"));

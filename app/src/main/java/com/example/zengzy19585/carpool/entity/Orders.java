@@ -12,7 +12,23 @@ public class Orders {
     private String distance;
     private String aptTime;
     private LatLng start, end;
-    private String status;
+    private String status, customerName, customerMobileNum;
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getCustomerMobileNum() {
+        return customerMobileNum;
+    }
+
+    public void setCustomerMobileNum(String customerMobileNum) {
+        this.customerMobileNum = customerMobileNum;
+    }
 
     public String getStatus() {
         return status;

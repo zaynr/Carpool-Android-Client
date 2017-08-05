@@ -70,6 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:background="@drawable/bt_red_ring"
                 android:text="@string/action_sign_in_short"
                 android:textStyle="bold" />
 
@@ -78,6 +79,7 @@
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bt_red_ring"
                 android:layout_marginTop="16dp"
                 android:text="注 册"
                 android:textStyle="bold" />

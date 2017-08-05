@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void updateDriverLoc(final LatLng latLng){
-        if(userInfo.getStringValue("userType").equals("customer")){
+        if(!userInfo.getStringValue("userType").equals("driver")){
             return;
         }
         AsyncHttpClient client = new AsyncHttpClient();

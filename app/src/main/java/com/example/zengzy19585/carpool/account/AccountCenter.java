@@ -170,7 +170,7 @@ public class AccountCenter extends AppCompatActivity {
                         JSONObject object = new JSONObject(new String(responseBody));
                         name.setText(object.getString("driver_name"));
                         sex.setText(object.getString("car_plate"));
-                        mobile_num.setText(object.getString("mobile_number"));
+                        mobile_num.setText(object.getString("rating"));
                     }catch (Exception e){
                         e.printStackTrace();
                     }
