@@ -8,14 +8,22 @@ public class Friends {
     private String userial1, userial2, serial_num, type, invokeName;
 
     private int serve_count;
-    private String rec_mobile_num, call_serial, call_mobile;
+    private String rec_mobile_num, call_serial, call_mobile_num, call_name;
 
-    public String getCall_mobile() {
-        return call_mobile;
+    public String getCall_mobile_num() {
+        return call_mobile_num;
     }
 
-    public void setCall_mobile(String call_mobile) {
-        this.call_mobile = call_mobile;
+    public void setCall_mobile_num(String call_mobile_num) {
+        this.call_mobile_num = call_mobile_num;
+    }
+
+    public String getCall_name() {
+        return call_name;
+    }
+
+    public void setCall_name(String call_name) {
+        this.call_name = call_name;
     }
 
     public String getType() {

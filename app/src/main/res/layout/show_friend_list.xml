@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/serve_count"
-        android:layout_toEndOf="@id/friend_name"
+        android:layout_below="@id/friend_contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
