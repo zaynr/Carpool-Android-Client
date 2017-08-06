@@ -186,8 +186,8 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                         if (res.equals("success!")) {
                             userInfo.setStringValue("userStatus", "loggedIn");
                             userInfo.setStringValue("userType", "customer");
-                            userInfo.setStringValue("userName", "恒生员工" + email);
-                            Intent intent = new Intent(getApplicationContext(), AccountCenter.class);
+                            userInfo.setStringValue("userName", email);
+                            Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
                             startActivity(intent);
                             finish();
                         } else {
