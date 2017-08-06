@@ -88,6 +88,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
         final AsyncHttpClient client = new AsyncHttpClient();
         final String url = "http://23.83.250.227:8080/order/get-all-undone-order.do";
         final RecOrderListViewAdapter adapter = new RecOrderListViewAdapter(orders, getApplicationContext());
+        refreshLayout.setRefreshing(true);
         client.post(url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -135,11 +136,13 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                         }
                     }
                 });
+                refreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
+                refreshLayout.setRefreshing(false);
             }
         });
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);

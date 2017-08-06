@@ -63,9 +63,13 @@ public class DriverServeListViweAdapter extends BaseAdapter {
         }
 
         if(friendses.get(i).getType().contains("driver")){
-            viewHolder.friendName.setText(friendses.get(i).getCall_serial());
+            viewHolder.friendName.setText(friendses.get(i).getCall_name());
             viewHolder.friendContact.setText(friendses.get(i).getCall_mobile_num());
-            viewHolder.serveCount.setText(String.valueOf(friendses.get(i).getServe_count()));
+            viewHolder.serveCount.setText("服务次数：" + String.valueOf(friendses.get(i).getServe_count()) + "\n");
+        }
+        else{
+            viewHolder.friendName.setText(friendses.get(i).getCall_name());
+            viewHolder.friendContact.setText(friendses.get(i).getCall_mobile_num());
         }
         return view;
     }

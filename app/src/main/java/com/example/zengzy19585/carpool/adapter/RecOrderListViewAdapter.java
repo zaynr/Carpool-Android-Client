@@ -72,10 +72,11 @@ public class RecOrderListViewAdapter extends BaseAdapter {
             result=convertView;
         }
 
-        viewHolder.serialNum.setText(order.getSerialNum());
-        viewHolder.oriAddress.setText(order.getOriAddress());
-        viewHolder.destAddress.setText(order.getDestAddress());
-        viewHolder.distance.setText(order.getDistance());
+        String str = "乘客：" + order.getCustomerName() + "\n手机号：" + order.getCustomerMobileNum();
+        viewHolder.serialNum.setText(str);
+        viewHolder.oriAddress.setText("起点：" + order.getOriAddress() + "\n");
+        viewHolder.destAddress.setText("终点：" + order.getDestAddress() + "\n");
+        viewHolder.distance.setText("全程：" + order.getDistance() + "\n");
         viewHolder.aptTime.setText(order.getAptTime());
         // Return the completed view to render on screen
         return convertView;

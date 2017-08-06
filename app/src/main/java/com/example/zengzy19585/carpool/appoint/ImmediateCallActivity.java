@@ -233,6 +233,8 @@ public class ImmediateCallActivity extends AppCompatActivity implements
                                     @Override
                                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                                         Toast.makeText(getApplicationContext(), "下单成功", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(ImmediateCallActivity.this, OrdersManageActivity.class);
+                                        startActivity(intent);
                                         finish();
                                     }
 

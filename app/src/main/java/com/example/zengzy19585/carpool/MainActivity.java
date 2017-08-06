@@ -295,7 +295,7 @@ public class MainActivity extends AppCompatActivity
             onPause();
         } else if (id == R.id.nav_share) {
             Intent it = new Intent(Intent.ACTION_SEND);
-            it.putExtra(Intent.EXTRA_TEXT, "Zayn 的拼车 APP, 欢迎试用: git@github.com:zaynr/Carpool-Android-Client.git");
+            it.putExtra(Intent.EXTRA_TEXT, "Zayn 的拼车 APP, 欢迎试用: https://github.com/zaynr/Carpool-Android-Client.git");
             it.setType("text/plain");
             startActivity(Intent.createChooser(it, "分享给你的朋友"));
         }
