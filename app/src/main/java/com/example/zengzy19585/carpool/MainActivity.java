@@ -207,6 +207,7 @@ public class MainActivity extends AppCompatActivity
         option.setCoorType("bd09ll"); // 设置坐标类型
         option.setScanSpan(2000);
         mLocClient.setLocOption(option);
+        mLocClient.start();
 
         //init push service
         PushAgent mPushAgent = PushAgent.getInstance(this);

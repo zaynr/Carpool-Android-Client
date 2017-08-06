@@ -218,7 +218,7 @@ public class ImmediateCallActivity extends AppCompatActivity implements
                                 date.setHours(date.getHours()+12);
                                 AsyncHttpClient client = new AsyncHttpClient();
                                 RequestParams params = new RequestParams();
-                                SharedPreferencesUtil util = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
+                                final SharedPreferencesUtil util = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
                                 String url = "http://23.83.250.227:8080/order/place-order.do";
                                 params.put("apt_time", date.getTime());
                                 params.put("ori_address", oriAuto.getText());
@@ -235,6 +235,7 @@ public class ImmediateCallActivity extends AppCompatActivity implements
                                         Toast.makeText(getApplicationContext(), "下单成功", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(ImmediateCallActivity.this, OrdersManageActivity.class);
                                         startActivity(intent);
+                                        util.setStringValue("callStatus", "immediatePlace");
                                         finish();
                                     }
 

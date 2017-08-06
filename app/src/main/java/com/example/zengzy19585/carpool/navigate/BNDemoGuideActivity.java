@@ -1,12 +1,21 @@
 package com.example.zengzy19585.carpool.navigate;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.StyleRes;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.baidu.navisdk.adapter.BNRouteGuideManager;
 import com.baidu.navisdk.adapter.BNRouteGuideManager.CustomizedLayerItem;
@@ -19,15 +28,26 @@ import com.baidu.navisdk.adapter.NaviModuleFactory;
 import com.baidu.navisdk.adapter.NaviModuleImpl;
 import com.example.zengzy19585.carpool.R;
 import com.example.zengzy19585.carpool.appoint.ReceivingOrdersActivity;
+import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.AsyncHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cz.msebera.android.httpclient.Header;
 
 public class BNDemoGuideActivity extends Activity {
 
 	private final String TAG = BNDemoGuideActivity.class.getName();
 	private BNRoutePlanNode mBNRoutePlanNode = null;
 	private BaiduNaviCommonModule mBaiduNaviCommonModule = null;
+	private String call_serial, rec_mobile_num;
+	private String serialNum;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +79,47 @@ public class BNDemoGuideActivity extends Activity {
 		if (hd != null) {
 			hd.sendEmptyMessageAtTime(MSG_SHOW, 5000);
 		}
+
+		AsyncHttpClient client = new AsyncHttpClient();
+		RequestParams params = new RequestParams();
+		SharedPreferencesUtil util = new SharedPreferencesUtil(BNDemoGuideActivity.this, "userInfo");
+		params.put("serial_num", util.getStringValue("recOrderSerial"));
+		serialNum = util.getStringValue("recOrderSerial");
+		String url = "http://23.83.250.227:8080/order/get-by-serial.do";
+		client.post(url, params, new AsyncHttpResponseHandler() {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+				try{
+					JSONArray array = new JSONArray(new String(responseBody));
+					JSONObject object = array.getJSONObject(0);
+					rec_mobile_num = object.getString("rec_mobile_num");
+					call_serial = object.getString("call_serial");
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+				String url = "http://23.83.250.227:8080/friend/update-driver-serve.do";
+				AsyncHttpClient client = new AsyncHttpClient();
+				RequestParams params = new RequestParams();
+				params.put("call_serial", call_serial);
+				params.put("rec_mobile_num", rec_mobile_num);
+				client.post(url, params, new AsyncHttpResponseHandler() {
+					@Override
+					public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+
+					}
+
+					@Override
+					public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+						Toast.makeText(getApplicationContext(), "更新数据失败！", Toast.LENGTH_SHORT).show();
+					}
+				});
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+				Toast.makeText(getApplicationContext(), "获取订单失败！", Toast.LENGTH_SHORT).show();
+			}
+		});
 	}
 
 	@Override
@@ -178,7 +239,10 @@ public class BNDemoGuideActivity extends Activity {
 		@Override
 		public void onNaviGuideEnd() {
 			//退出导航
-			finish();
+			RatingDialog dialog = new RatingDialog(BNDemoGuideActivity.this, R.style.AppTheme);
+			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+			dialog.show();
+//			finish();
 		}
 
 		@Override
@@ -200,5 +264,51 @@ public class BNDemoGuideActivity extends Activity {
 		final static int METHOD_TYPE_ON_KEY_DOWN = 0x01;
 		final static String KEY_TYPE_KEYCODE = "keyCode";
 		final static String KEY_TYPE_EVENT = "event";
+	}
+
+	private class RatingDialog extends Dialog{
+
+		public RatingDialog(@NonNull Context context) {
+			super(context);
+		}
+
+		public RatingDialog(@NonNull Context context, @StyleRes int themeResId) {
+			super(context, themeResId);
+		}
+
+		@Override
+		protected void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			setContentView(R.layout.driver_rating_dialog);
+			final RatingBar ratingBar = findViewById(R.id.driver_rating);
+			final EditText comment = findViewById(R.id.comment);
+			Button commit = findViewById(R.id.commit);
+			commit.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					double rating = ratingBar.getRating();
+					String str = comment.getText().toString();
+					String url = "http://23.83.250.227:8080/order/finish-order.do";
+					AsyncHttpClient client = new AsyncHttpClient();
+					RequestParams params = new RequestParams();
+					params.put("comment", str);
+					params.put("serial_num", serialNum);
+					params.put("rec_mobile_num", rec_mobile_num);
+					params.put("rating", rating);
+					client.post(url, params, new AsyncHttpResponseHandler() {
+						@Override
+						public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+							Toast.makeText(getApplicationContext(), "评价成功！", Toast.LENGTH_SHORT).show();
+							finish();
+						}
+
+						@Override
+						public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+							Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
+			});
+		}
 	}
 }

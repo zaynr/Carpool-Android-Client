@@ -29,6 +29,7 @@ import com.baidu.navisdk.adapter.BaiduNaviManager;
 import com.baidu.navisdk.adapter.BaiduNaviManager.NaviInitListener;
 import com.baidu.navisdk.adapter.BaiduNaviManager.TTSPlayMsgType;
 import com.baidu.navisdk.adapter.BaiduNaviManager.TTSPlayStateListener;
+import com.example.zengzy19585.carpool.MainActivity;
 import com.example.zengzy19585.carpool.R;
 import com.example.zengzy19585.carpool.adapter.RecOrderListViewAdapter;
 import com.example.zengzy19585.carpool.entity.Orders;
@@ -73,6 +74,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_receiving_orders);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         //init navi
         BNOuterLogUtil.setLogSwitcher(true);
         if (initDirs()) {
@@ -145,7 +147,6 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                 refreshLayout.setRefreshing(false);
             }
         });
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -430,6 +431,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                     RequestParams recOrder = new RequestParams();
                     recOrder.put("serial_num", Integer.parseInt(orders.get(curIndex).getSerialNum()));
                     recOrder.put("rec_mobile_num", util.getStringValue("userName"));
+                    util.setStringValue("recOrderSerial", orders.get(curIndex).getSerialNum());
                     String url = "http://23.83.250.227:8080/order/confirm-order.do";
                     client.post(url, recOrder, new AsyncHttpResponseHandler() {
                         @Override

@@ -1,11 +1,26 @@
 package com.example.zengzy19585.carpool.appoint;
 
+import android.app.Dialog;
+import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.StyleRes;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
@@ -15,6 +30,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.example.zengzy19585.carpool.R;
 import com.example.zengzy19585.carpool.adapter.RecOrderListViewAdapter;
 import com.example.zengzy19585.carpool.entity.Orders;
+import com.example.zengzy19585.carpool.navigate.BNDemoGuideActivity;
 import com.example.zengzy19585.carpool.utils.GetDistanceUtil;
 import com.example.zengzy19585.carpool.utils.SharedPreferencesUtil;
 import com.loopj.android.http.AsyncHttpClient;
@@ -33,6 +49,12 @@ public class OrdersManageActivity extends AppCompatActivity{
     private ArrayList<Orders> orders;
     private ArrayList<LatLng> points;
     private ListView listView;
+    private SharedPreferencesUtil preferencesUtil;
+    public MyLocationListenner myListener = new MyLocationListenner();
+    private LocationClient mLocClient;
+    private String call_serial, rec_mobile_num;
+    private String serialNum;
+    private SharedPreferencesUtil util;
 
     public void packResponse(byte[] responseBody){
         try {
@@ -44,6 +66,9 @@ public class OrdersManageActivity extends AppCompatActivity{
                     continue;
                 }
                 Orders order = new Orders();
+                JSONObject object = jsonArray.getJSONObject(i);
+                order.setCustomerName(object.getString("customer_name"));
+                order.setCustomerMobileNum(object.getString("customer_mobile_number"));
                 order.setOriAddress(jsonArray.getJSONObject(i).getString("ori_address"));
                 order.setDestAddress(jsonArray.getJSONObject(i).getString("des_address"));
                 order.setAptTime(jsonArray.getJSONObject(i).getString("apt_time"));
@@ -71,17 +96,23 @@ public class OrdersManageActivity extends AppCompatActivity{
         listView = (ListView) findViewById(R.id.order_list);
         points = new ArrayList<>();
         orders = new ArrayList<>();
+        util = new SharedPreferencesUtil(OrdersManageActivity.this, "userInfo");
         setTitle("查看订单");
         final SwipeRefreshLayout layout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         final RecOrderListViewAdapter adapter = new RecOrderListViewAdapter(orders, getApplicationContext());
         final AsyncHttpClient client = new AsyncHttpClient();
-        SharedPreferencesUtil preferencesUtil = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
+        preferencesUtil = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
         final String url;
         final RequestParams params = new RequestParams();
         layout.setRefreshing(true);
         if(preferencesUtil.getStringValue("userType").contains("driver")) {
             url = "http://23.83.250.227:8080/order/get-by-rec.do";
             params.put("rec_mobile_num", preferencesUtil.getStringValue("userName"));
+        }
+        //immediatePlace
+        else if(preferencesUtil.getStringValue("callStatus").contains("immediatePlace")){
+            setTitle("等待接单");
+            url = "http://23.83.250.227:8080/order/get-all-undone-order.do";
         }
         else{
             url = "http://23.83.250.227:8080/order/get-by-call.do";
@@ -120,6 +151,84 @@ public class OrdersManageActivity extends AppCompatActivity{
                 });
             }
         });
+        // 定位初始化
+        mLocClient = new LocationClient(this);
+        mLocClient.registerLocationListener(myListener);
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true); // 打开gps
+        option.setCoorType("bd09ll"); // 设置坐标类型
+        option.setScanSpan(2000);
+        mLocClient.setLocOption(option);
+        mLocClient.start();
+    }
+
+    /**
+     * 定位SDK监听函数
+     */
+    private class MyLocationListenner implements BDLocationListener {
+
+        @Override
+        public void onConnectHotSpotMessage(String s, int i) {
+
+        }
+
+        @Override
+        public void onReceiveLocation(BDLocation location) {
+            AsyncHttpClient client = new AsyncHttpClient();
+            RequestParams params = new RequestParams();
+            params.put("serial_num", serialNum);
+            String url = "http://23.83.250.227:8080/order/get-by-serial.do";
+        }
+
+        public void onReceivePoi(BDLocation poiLocation) {
+        }
+    }
+
+    private class RatingDialog extends Dialog {
+
+        public RatingDialog(@NonNull Context context) {
+            super(context);
+        }
+
+        public RatingDialog(@NonNull Context context, @StyleRes int themeResId) {
+            super(context, themeResId);
+        }
+
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.driver_rating_dialog);
+            final RatingBar ratingBar = findViewById(R.id.driver_rating);
+            final EditText comment = findViewById(R.id.comment);
+            Button commit = findViewById(R.id.commit);
+            commit.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    double rating = ratingBar.getRating();
+                    String str = comment.getText().toString();
+                    String url = "http://23.83.250.227:8080/order/finish-order.do";
+                    serialNum = util.getStringValue("recOrderSerial");
+                    AsyncHttpClient client = new AsyncHttpClient();
+                    RequestParams params = new RequestParams();
+                    params.put("comment", str);
+                    params.put("serial_num", serialNum);
+                    params.put("rec_mobile_num", rec_mobile_num);
+                    params.put("rating", rating);
+                    client.post(url, params, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            Toast.makeText(getApplicationContext(), "评价成功！", Toast.LENGTH_SHORT).show();
+                            finish();
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        }
     }
 
 }
