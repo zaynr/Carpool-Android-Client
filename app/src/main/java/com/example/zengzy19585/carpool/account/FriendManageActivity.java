@@ -160,9 +160,11 @@ public class FriendManageActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AddFriendDialog dialog = new AddFriendDialog(FriendManageActivity.this);
-                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                dialog.show();
+                if(userInfo.getStringValue("userType").contains("customer")) {
+                    AddFriendDialog dialog = new AddFriendDialog(FriendManageActivity.this);
+                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                    dialog.show();
+                }
             }
         });
     }
