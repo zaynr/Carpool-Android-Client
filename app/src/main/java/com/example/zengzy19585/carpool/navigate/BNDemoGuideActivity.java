@@ -83,8 +83,8 @@ public class BNDemoGuideActivity extends Activity {
 		AsyncHttpClient client = new AsyncHttpClient();
 		RequestParams params = new RequestParams();
 		SharedPreferencesUtil util = new SharedPreferencesUtil(BNDemoGuideActivity.this, "userInfo");
-		params.put("serial_num", util.getStringValue("recOrderSerial"));
 		serialNum = util.getStringValue("recOrderSerial");
+		params.put("serial_num", serialNum);
 		String url = "http://23.83.250.227:8080/order/get-by-serial.do";
 		client.post(url, params, new AsyncHttpResponseHandler() {
 			@Override
@@ -239,9 +239,23 @@ public class BNDemoGuideActivity extends Activity {
 		@Override
 		public void onNaviGuideEnd() {
 			//退出导航
-			RatingDialog dialog = new RatingDialog(BNDemoGuideActivity.this, R.style.AppTheme);
-			dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-			dialog.show();
+			AsyncHttpClient client = new AsyncHttpClient();
+			String url = "http://23.83.250.227:8080/order/end-order.do";
+			RequestParams params = new RequestParams();
+			params.put("serial_num", serialNum);
+			client.post(url, params, new AsyncHttpResponseHandler() {
+				@Override
+				public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+					RatingDialog dialog = new RatingDialog(BNDemoGuideActivity.this, R.style.AppTheme);
+					dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+					dialog.show();
+				}
+
+				@Override
+				public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+					Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
+				}
+			});
 //			finish();
 		}
 
@@ -288,12 +302,12 @@ public class BNDemoGuideActivity extends Activity {
 				public void onClick(View view) {
 					double rating = ratingBar.getRating();
 					String str = comment.getText().toString();
-					String url = "http://23.83.250.227:8080/order/finish-order.do";
+					String url = "http://23.83.250.227:8080/order/dvr-finish-order.do";
 					AsyncHttpClient client = new AsyncHttpClient();
 					RequestParams params = new RequestParams();
 					params.put("comment", str);
 					params.put("serial_num", serialNum);
-					params.put("rec_mobile_num", rec_mobile_num);
+					params.put("call_serial", call_serial);
 					params.put("rating", rating);
 					client.post(url, params, new AsyncHttpResponseHandler() {
 						@Override

@@ -1,10 +1,12 @@
 package com.example.zengzy19585.carpool.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.zengzy19585.carpool.R;
@@ -27,6 +29,7 @@ public class RecOrderListViewAdapter extends BaseAdapter {
 
     private class ViewHolder{
         TextView serialNum, oriAddress, destAddress, distance, aptTime;
+        RelativeLayout relativeLayout;
     }
 
     @Override
@@ -58,6 +61,7 @@ public class RecOrderListViewAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(context);
             convertView = inflater.inflate(R.layout.rec_order_list_adapter, viewGroup, false);
+            viewHolder.relativeLayout = convertView.findViewById(R.id.order_item);
             viewHolder.serialNum = convertView.findViewById(R.id.order_serial_num);
             viewHolder.oriAddress = convertView.findViewById(R.id.ori_address);
             viewHolder.destAddress = convertView.findViewById(R.id.dest_address);
@@ -76,8 +80,20 @@ public class RecOrderListViewAdapter extends BaseAdapter {
         viewHolder.serialNum.setText(str);
         viewHolder.oriAddress.setText("起点：" + order.getOriAddress() + "\n");
         viewHolder.destAddress.setText("终点：" + order.getDestAddress() + "\n");
-        viewHolder.distance.setText("全程：" + order.getDistance() + "\n");
+        viewHolder.distance.setText(order.getDistance());
         viewHolder.aptTime.setText(order.getAptTime());
+        if(order.getStatus().equals("0")){
+            viewHolder.relativeLayout.setBackgroundColor(Color.GREEN);
+        }
+        else if(order.getStatus().equals("1")){
+            viewHolder.relativeLayout.setBackgroundColor(Color.CYAN);
+        }
+        else if(order.getStatus().equals("2")){
+            viewHolder.relativeLayout.setBackgroundColor(Color.GRAY);
+        }
+        else{
+            viewHolder.relativeLayout.setBackgroundColor(Color.RED);
+        }
         // Return the completed view to render on screen
         return convertView;
     }

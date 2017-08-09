@@ -5,9 +5,11 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -53,8 +55,10 @@ public class OrdersManageActivity extends AppCompatActivity{
     public MyLocationListenner myListener = new MyLocationListenner();
     private LocationClient mLocClient;
     private String call_serial, rec_mobile_num;
+    private LatLng dest;
     private String serialNum;
     private SharedPreferencesUtil util;
+    private RecOrderListViewAdapter adapter;
 
     public void packResponse(byte[] responseBody){
         try {
@@ -67,8 +71,10 @@ public class OrdersManageActivity extends AppCompatActivity{
                 }
                 Orders order = new Orders();
                 JSONObject object = jsonArray.getJSONObject(i);
+                order.setCallType(object.getString("call_type"));
                 order.setCustomerName(object.getString("customer_name"));
                 order.setCustomerMobileNum(object.getString("customer_mobile_number"));
+                order.setStatus(object.getString("status"));
                 order.setOriAddress(jsonArray.getJSONObject(i).getString("ori_address"));
                 order.setDestAddress(jsonArray.getJSONObject(i).getString("des_address"));
                 order.setAptTime(jsonArray.getJSONObject(i).getString("apt_time"));
@@ -80,7 +86,7 @@ public class OrdersManageActivity extends AppCompatActivity{
                 GetDistanceUtil util = new GetDistanceUtil(start, end);
                 order.setStart(start);
                 order.setEnd(end);
-                order.setDistance(String.valueOf(util.getDistance()) + "米");
+                order.setDistance("全程：" + String.valueOf(util.getDistance()) + "米");
                 orders.add(order);
             }
         } catch (Exception e) {
@@ -97,9 +103,10 @@ public class OrdersManageActivity extends AppCompatActivity{
         points = new ArrayList<>();
         orders = new ArrayList<>();
         util = new SharedPreferencesUtil(OrdersManageActivity.this, "userInfo");
+        serialNum = util.getStringValue("currentCallSn");
         setTitle("查看订单");
         final SwipeRefreshLayout layout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
-        final RecOrderListViewAdapter adapter = new RecOrderListViewAdapter(orders, getApplicationContext());
+        adapter = new RecOrderListViewAdapter(orders, getApplicationContext());
         final AsyncHttpClient client = new AsyncHttpClient();
         preferencesUtil = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
         final String url;
@@ -174,17 +181,61 @@ public class OrdersManageActivity extends AppCompatActivity{
 
         @Override
         public void onReceiveLocation(BDLocation location) {
-            AsyncHttpClient client = new AsyncHttpClient();
-            RequestParams params = new RequestParams();
-            params.put("serial_num", serialNum);
-            String url = "http://23.83.250.227:8080/order/get-by-serial.do";
+            if(preferencesUtil.getStringValue("callStatus").contains("immediatePlace")) {
+                AsyncHttpClient client = new AsyncHttpClient();
+                RequestParams params = new RequestParams();
+                params.put("serial_num", serialNum);
+                String url = "http://23.83.250.227:8080/order/get-by-serial.do";
+                client.post(url, params, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        try {
+                            JSONArray jsonArray = new JSONArray(new String(responseBody));
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                if (jsonArray.getJSONObject(i).getString("ori_lat") == null
+                                        || jsonArray.getJSONObject(i).getString("ori_lng") == null) {
+                                    continue;
+                                }
+                                Orders order = new Orders();
+                                JSONObject object = jsonArray.getJSONObject(i);
+                                order.setStatus(object.getString("status"));
+                                if (object.getString("status").equals("1")) {
+                                    packResponse(responseBody);
+                                    rec_mobile_num = object.getString("rec_mobile_num");
+                                    order.setDistance("司机手机：" + rec_mobile_num);
+                                    adapter.notifyDataSetChanged();
+                                    setTitle("已接单");
+                                }
+                                if (object.getString("status").equals("2")) {
+                                    preferencesUtil.setStringValue("callStatus","fin");
+                                    packResponse(responseBody);
+                                    orders.add(order);
+                                    adapter.notifyDataSetChanged();
+                                    setTitle("已完成订单");
+                                    RatingDialog dialog = new RatingDialog(OrdersManageActivity.this);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.show();
+                                }
+                                dest = new LatLng(object.getDouble("des_lat"), object.getDouble("des_lng"));
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
         }
     }
 
-    private class RatingDialog extends Dialog {
+    private class RatingDialog extends AlertDialog {
 
         public RatingDialog(@NonNull Context context) {
             super(context);
@@ -198,16 +249,15 @@ public class OrdersManageActivity extends AppCompatActivity{
         protected void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             setContentView(R.layout.driver_rating_dialog);
-            final RatingBar ratingBar = findViewById(R.id.driver_rating);
-            final EditText comment = findViewById(R.id.comment);
-            Button commit = findViewById(R.id.commit);
+            final RatingBar ratingBar = (RatingBar) findViewById(R.id.driver_rating);
+            final EditText comment = (EditText) findViewById(R.id.comment);
+            Button commit = (Button) findViewById(R.id.commit);
             commit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     double rating = ratingBar.getRating();
                     String str = comment.getText().toString();
-                    String url = "http://23.83.250.227:8080/order/finish-order.do";
-                    serialNum = util.getStringValue("recOrderSerial");
+                    String url = "http://23.83.250.227:8080/order/cus-finish-order.do";
                     AsyncHttpClient client = new AsyncHttpClient();
                     RequestParams params = new RequestParams();
                     params.put("comment", str);

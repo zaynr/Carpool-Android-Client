@@ -236,6 +236,8 @@ public class ImmediateCallActivity extends AppCompatActivity implements
                                         Intent intent = new Intent(ImmediateCallActivity.this, OrdersManageActivity.class);
                                         startActivity(intent);
                                         util.setStringValue("callStatus", "immediatePlace");
+                                        String sn = new String(responseBody);
+                                        util.setStringValue("currentCallSn", sn);
                                         finish();
                                     }
 
@@ -408,7 +410,7 @@ public class ImmediateCallActivity extends AppCompatActivity implements
                             , timePicker.getCurrentMinute());
                     AsyncHttpClient client = new AsyncHttpClient();
                     RequestParams params = new RequestParams();
-                    SharedPreferencesUtil util = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
+                    final SharedPreferencesUtil util = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
                     String url = "http://23.83.250.227:8080/order/place-order.do";
                     params.put("ori_lat", oriLatlng.latitude);
                     params.put("ori_lng", oriLatlng.longitude);

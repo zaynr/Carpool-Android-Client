@@ -9,6 +9,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -178,12 +179,13 @@ public class FriendManageActivity extends AppCompatActivity {
             setContentView(R.layout.update_password_dialog);
             final EditText oldPwd;
             TextView textView = findViewById(R.id.pwd_label);
-            LinearLayout layout = findViewById(R.id.linearLayout2);
+            LinearLayout layout = findViewById(R.id.linearLayout);
             layout.setVisibility(View.INVISIBLE);
             Button commit;
             textView.setText("添加好友的工号：");
             commit = findViewById(R.id.commit);
-            oldPwd = findViewById(R.id.old_pwd);
+            oldPwd = findViewById(R.id.new_pwd);
+            oldPwd.setInputType(InputType.TYPE_CLASS_NUMBER);
             commit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
