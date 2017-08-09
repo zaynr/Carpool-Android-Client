@@ -70,6 +70,39 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
     private SharedPreferencesUtil util;
     private SwipeRefreshLayout refreshLayout;
 
+    public void packRes(byte[] responseBody){
+        try {
+            orders.clear();
+            JSONArray jsonArray = new JSONArray(new String(responseBody));
+            for (int i = 0; i < jsonArray.length(); i++) {
+                if (jsonArray.getJSONObject(i).getString("ori_lat") == null) {
+                    continue;
+                }
+                Orders order = new Orders();
+                order.setCallType(jsonArray.getJSONObject(i).getString("status"));
+                order.setCallType(jsonArray.getJSONObject(i).getString("call_type"));
+                order.setCallSerial(jsonArray.getJSONObject(i).getString("call_serial"));
+                order.setCustomerName(jsonArray.getJSONObject(i).getString("customer_name"));
+                order.setCustomerMobileNum(jsonArray.getJSONObject(i).getString("customer_mobile_number"));
+                order.setOriAddress(jsonArray.getJSONObject(i).getString("ori_address"));
+                order.setDestAddress(jsonArray.getJSONObject(i).getString("des_address"));
+                order.setAptTime(jsonArray.getJSONObject(i).getString("apt_time"));
+                order.setSerialNum(jsonArray.getJSONObject(i).getString("serial_num"));
+                LatLng start = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lat"))
+                        , Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lng")));
+                LatLng end = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lat"))
+                        , Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lng")));
+                GetDistanceUtil util = new GetDistanceUtil(start, end);
+                order.setStart(start);
+                order.setEnd(end);
+                order.setDistance(String.valueOf(util.getDistance()) + "米");
+                orders.add(order);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,35 +127,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
         client.post(url, null, new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                try {
-                    JSONArray jsonArray = new JSONArray(new String(responseBody));
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        if (jsonArray.getJSONObject(i).getString("ori_lat") == null) {
-                            continue;
-                        }
-                        Orders order = new Orders();
-                        order.setCallType(jsonArray.getJSONObject(i).getString("status"));
-                        order.setCallType(jsonArray.getJSONObject(i).getString("call_type"));
-                        order.setCallSerial(jsonArray.getJSONObject(i).getString("call_serial"));
-                        order.setCustomerName(jsonArray.getJSONObject(i).getString("customer_name"));
-                        order.setCustomerMobileNum(jsonArray.getJSONObject(i).getString("customer_mobile_number"));
-                        order.setOriAddress(jsonArray.getJSONObject(i).getString("ori_address"));
-                        order.setDestAddress(jsonArray.getJSONObject(i).getString("des_address"));
-                        order.setAptTime(jsonArray.getJSONObject(i).getString("apt_time"));
-                        order.setSerialNum(jsonArray.getJSONObject(i).getString("serial_num"));
-                        LatLng start = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lat"))
-                                , Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lng")));
-                        LatLng end = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lat"))
-                                , Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lng")));
-                        GetDistanceUtil util = new GetDistanceUtil(start, end);
-                        order.setStart(start);
-                        order.setEnd(end);
-                        order.setDistance(String.valueOf(util.getDistance()) + "米");
-                        orders.add(order);
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                packRes(responseBody);
                 listView.setAdapter(adapter);
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
@@ -155,33 +160,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                 client.post(url, null, new AsyncHttpResponseHandler() {
                     @Override
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                        try {
-                            orders.clear();
-                            JSONArray jsonArray = new JSONArray(new String(responseBody));
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                if (jsonArray.getJSONObject(i).getString("ori_lat") == null) {
-                                    continue;
-                                }
-                                Orders order = new Orders();
-                                order.setCustomerName(jsonArray.getJSONObject(i).getString("customer_name"));
-                                order.setCustomerMobileNum(jsonArray.getJSONObject(i).getString("customer_mobile_number"));
-                                order.setOriAddress(jsonArray.getJSONObject(i).getString("ori_address"));
-                                order.setDestAddress(jsonArray.getJSONObject(i).getString("des_address"));
-                                order.setAptTime(jsonArray.getJSONObject(i).getString("apt_time"));
-                                order.setSerialNum(jsonArray.getJSONObject(i).getString("serial_num"));
-                                LatLng start = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lat"))
-                                        , Double.parseDouble(jsonArray.getJSONObject(i).getString("ori_lng")));
-                                LatLng end = new LatLng(Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lat"))
-                                        , Double.parseDouble(jsonArray.getJSONObject(i).getString("des_lng")));
-                                GetDistanceUtil util = new GetDistanceUtil(start, end);
-                                order.setStart(start);
-                                order.setEnd(end);
-                                order.setDistance(String.valueOf(util.getDistance()) + "米");
-                                orders.add(order);
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        packRes(responseBody);
                         adapter.notifyDataSetChanged();
                         refreshLayout.setRefreshing(false);
                     }
