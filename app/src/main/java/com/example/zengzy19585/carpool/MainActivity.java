@@ -165,20 +165,20 @@ public class MainActivity extends AppCompatActivity
                     intent.putExtra("curLat", mCurrentLat);
                     intent.putExtra("curLng", mCurrentLon);
                     startActivity(intent);
-                    onPause();
+                    finish();
                 }
                 else if(userInfo.getStringValue("userType").equals("driver")) {
                     Intent intent = new Intent(getApplication(), ReceivingOrdersActivity.class);
                     intent.putExtra("curLat", mCurrentLat);
                     intent.putExtra("curLng", mCurrentLon);
                     startActivity(intent);
-                    onPause();
+                    finish();
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "请先登录", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplication(), LoginActivity.class);
                     startActivity(intent);
-                    onPause();
+                    finish();
                 }
             }
         });
