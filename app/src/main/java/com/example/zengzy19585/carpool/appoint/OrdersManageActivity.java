@@ -2,6 +2,7 @@ package com.example.zengzy19585.carpool.appoint;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.StyleRes;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -54,11 +55,12 @@ public class OrdersManageActivity extends AppCompatActivity{
     private SharedPreferencesUtil preferencesUtil;
     public MyLocationListenner myListener = new MyLocationListenner();
     private LocationClient mLocClient;
-    private String call_serial, rec_mobile_num;
+    private String call_serial;
     private LatLng dest;
-    private String serialNum;
+    private String serialNum, rec_mobile_num;
     private SharedPreferencesUtil util;
     private RecOrderListViewAdapter adapter;
+    boolean isFirstLoc = true; // 是否首次定位
 
     public void packResponse(byte[] responseBody){
         try {
@@ -199,22 +201,12 @@ public class OrdersManageActivity extends AppCompatActivity{
                                 Orders order = new Orders();
                                 JSONObject object = jsonArray.getJSONObject(i);
                                 order.setStatus(object.getString("status"));
-                                if (object.getString("status").equals("1")) {
-                                    packResponse(responseBody);
-                                    rec_mobile_num = object.getString("rec_mobile_num");
-                                    order.setDistance("司机手机：" + rec_mobile_num);
-                                    adapter.notifyDataSetChanged();
-                                    setTitle("已接单");
-                                }
-                                if (object.getString("status").equals("2")) {
-                                    preferencesUtil.setStringValue("callStatus","fin");
-                                    packResponse(responseBody);
-                                    orders.add(order);
-                                    adapter.notifyDataSetChanged();
-                                    setTitle("已完成订单");
-                                    RatingDialog dialog = new RatingDialog(OrdersManageActivity.this);
-                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-                                    dialog.show();
+                                if (object.getString("status").equals("1") && isFirstLoc) {
+                                    isFirstLoc = false;
+                                    Intent intent = new Intent(OrdersManageActivity.this, DriverDetail.class);
+                                    intent.putExtra("mobileNumber", object.getString("rec_mobile_num"));
+                                    startActivity(intent);
+                                    finish();
                                 }
                                 dest = new LatLng(object.getDouble("des_lat"), object.getDouble("des_lng"));
                             }
@@ -232,52 +224,6 @@ public class OrdersManageActivity extends AppCompatActivity{
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
-        }
-    }
-
-    private class RatingDialog extends AlertDialog {
-
-        public RatingDialog(@NonNull Context context) {
-            super(context);
-        }
-
-        public RatingDialog(@NonNull Context context, @StyleRes int themeResId) {
-            super(context, themeResId);
-        }
-
-        @Override
-        protected void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            setContentView(R.layout.driver_rating_dialog);
-            final RatingBar ratingBar = (RatingBar) findViewById(R.id.driver_rating);
-//            final EditText comment = (EditText) findViewById(R.id.comment);
-            Button commit = (Button) findViewById(R.id.commit);
-            commit.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    double rating = ratingBar.getRating();
-//                    String str = comment.getText().toString();
-                    String url = "http://23.83.250.227:8080/order/cus-finish-order.do";
-                    AsyncHttpClient client = new AsyncHttpClient();
-                    RequestParams params = new RequestParams();
-                    params.put("comment", "");
-                    params.put("serial_num", serialNum);
-                    params.put("rec_mobile_num", rec_mobile_num);
-                    params.put("rating", rating);
-                    client.post(url, params, new AsyncHttpResponseHandler() {
-                        @Override
-                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                            Toast.makeText(getApplicationContext(), "评价成功！", Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-
-                        @Override
-                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                            Toast.makeText(getApplicationContext(), "网络错误！", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-            });
         }
     }
 

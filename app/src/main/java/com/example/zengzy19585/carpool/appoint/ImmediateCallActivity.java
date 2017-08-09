@@ -299,7 +299,6 @@ public class ImmediateCallActivity extends AppCompatActivity implements
             builder.zoom(mBaiduMap.getMapStatus().zoom - 0.2f);
             mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
         }
-
     }
 
     @Override

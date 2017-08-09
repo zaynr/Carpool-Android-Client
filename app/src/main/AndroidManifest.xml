@@ -26,15 +26,15 @@
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
 
-        <!--android:icon="@mipmap/ic_launcher"-->
-        <!--android:roundIcon="@mipmap/ic_launcher_round"-->
+    <!-- android:icon="@mipmap/ic_launcher" -->
+    <!-- android:roundIcon="@mipmap/ic_launcher_round" -->
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_menu_send"
-        android:roundIcon="@drawable/ic_menu_send"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
         android:hardwareAccelerated="true"
+        android:icon="@drawable/ic_menu_send"
+        android:label="@string/app_name"
+        android:roundIcon="@drawable/ic_menu_send"
+        android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <service
             android:name="com.baidu.location.f"
@@ -43,14 +43,13 @@
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="596dbf40f29d9836ed00060a"/>
+            android:value="596dbf40f29d9836ed00060a" />
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="1235286a713d60f70dfe88d4c9042ff5"/>
+            android:value="1235286a713d60f70dfe88d4c9042ff5" />
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="Hundsun" />
-
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="tno0xrzuKRknCau3EjGwFuKUSuFIn2ep" />
@@ -75,14 +74,16 @@
         <activity android:name=".appoint.ImmediateCallActivity" />
         <activity android:name=".appoint.OrdersManageActivity" />
         <activity android:name=".appoint.ReceivingOrdersActivity" />
-        <activity android:name=".navigate.BNDemoGuideActivity"
+        <activity
+            android:name=".navigate.BNDemoGuideActivity"
             android:configChanges="orientation|screenSize|keyboard|keyboardHidden"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-        </activity>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen" />
         <activity
             android:name=".account.FriendManageActivity"
             android:label="@string/title_activity_friend_manage"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".appoint.DriverDetail" />
+        <activity android:name=".appoint.RatingActivity"></activity>
     </application>
 
 </manifest>
