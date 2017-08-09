@@ -79,7 +79,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                     continue;
                 }
                 Orders order = new Orders();
-                order.setCallType(jsonArray.getJSONObject(i).getString("status"));
+                order.setStatus(jsonArray.getJSONObject(i).getString("status"));
                 order.setCallType(jsonArray.getJSONObject(i).getString("call_type"));
                 order.setCallSerial(jsonArray.getJSONObject(i).getString("call_serial"));
                 order.setCustomerName(jsonArray.getJSONObject(i).getString("customer_name"));
