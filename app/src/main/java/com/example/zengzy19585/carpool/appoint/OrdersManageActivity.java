@@ -250,17 +250,17 @@ public class OrdersManageActivity extends AppCompatActivity{
             super.onCreate(savedInstanceState);
             setContentView(R.layout.driver_rating_dialog);
             final RatingBar ratingBar = (RatingBar) findViewById(R.id.driver_rating);
-            final EditText comment = (EditText) findViewById(R.id.comment);
+//            final EditText comment = (EditText) findViewById(R.id.comment);
             Button commit = (Button) findViewById(R.id.commit);
             commit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     double rating = ratingBar.getRating();
-                    String str = comment.getText().toString();
+//                    String str = comment.getText().toString();
                     String url = "http://23.83.250.227:8080/order/cus-finish-order.do";
                     AsyncHttpClient client = new AsyncHttpClient();
                     RequestParams params = new RequestParams();
-                    params.put("comment", str);
+                    params.put("comment", "");
                     params.put("serial_num", serialNum);
                     params.put("rec_mobile_num", rec_mobile_num);
                     params.put("rating", rating);

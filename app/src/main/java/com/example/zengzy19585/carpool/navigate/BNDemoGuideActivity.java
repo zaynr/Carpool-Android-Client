@@ -295,17 +295,17 @@ public class BNDemoGuideActivity extends Activity {
 			super.onCreate(savedInstanceState);
 			setContentView(R.layout.driver_rating_dialog);
 			final RatingBar ratingBar = findViewById(R.id.driver_rating);
-			final EditText comment = findViewById(R.id.comment);
+//			final EditText comment = findViewById(R.id.comment);
 			Button commit = findViewById(R.id.commit);
 			commit.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View view) {
 					double rating = ratingBar.getRating();
-					String str = comment.getText().toString();
+//					String str = comment.getText().toString();
 					String url = "http://23.83.250.227:8080/order/dvr-finish-order.do";
 					AsyncHttpClient client = new AsyncHttpClient();
 					RequestParams params = new RequestParams();
-					params.put("comment", str);
+					params.put("comment", "");
 					params.put("serial_num", serialNum);
 					params.put("call_serial", call_serial);
 					params.put("rating", rating);
