@@ -82,7 +82,8 @@
             android:name=".account.FriendManageActivity"
             android:label="@string/title_activity_friend_manage"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".appoint.DriverDetail" />
+        <activity android:name=".appoint.DriverDetail"
+            android:label="已接单"/>
         <activity android:name=".appoint.RatingActivity"></activity>
     </application>
 

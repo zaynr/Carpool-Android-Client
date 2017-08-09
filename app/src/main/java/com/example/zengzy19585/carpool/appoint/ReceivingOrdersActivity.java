@@ -79,6 +79,7 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
                     continue;
                 }
                 Orders order = new Orders();
+                order.setCustomerRating(jsonArray.getJSONObject(i).getString("customer_rating"));
                 order.setStatus(jsonArray.getJSONObject(i).getString("status"));
                 order.setCallType(jsonArray.getJSONObject(i).getString("call_type"));
                 order.setCallSerial(jsonArray.getJSONObject(i).getString("call_serial"));
@@ -399,10 +400,10 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
             TextView confirmOri, confirmDis;
             confirmOri = findViewById(R.id.confirm_ori);
             confirmDis = findViewById(R.id.confirm_dis);
-            confirmOri.setText(confirmOri.getText() + orders.get(curIndex).getOriAddress());
             GetDistanceUtil distanceUtil = new GetDistanceUtil(new LatLng(curNode.getLatitude(), curNode.getLongitude())
                     , new LatLng(sNode.getLatitude(), sNode.getLongitude()));
-            confirmDis.setText(confirmDis.getText() + String.valueOf(distanceUtil.getDistance()) + "米");
+            confirmOri.setText(confirmOri.getText() + orders.get(curIndex).getOriAddress() + "\n" + confirmDis.getText() + String.valueOf(distanceUtil.getDistance()) + "米\n");
+            confirmDis.setText("乘客姓名：" + orders.get(curIndex).getCustomerName() + "\n乘客评分：" + orders.get(curIndex).getCustomerRating());
             confirm = findViewById(R.id.confirm_action);
             cancel = findViewById(R.id.cancel_action);
             confirm.setOnClickListener(new View.OnClickListener() {

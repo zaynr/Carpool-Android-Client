@@ -12,7 +12,15 @@ public class Orders {
     private String distance;
     private String aptTime;
     private LatLng start, end;
-    private String status, customerName, customerMobileNum, callSerial, callType;
+    private String status, customerName, customerMobileNum, callSerial, callType, customerRating;
+
+    public String getCustomerRating() {
+        return customerRating;
+    }
+
+    public void setCustomerRating(String customerRating) {
+        this.customerRating = customerRating;
+    }
 
     public String getCallType() {
         return callType;

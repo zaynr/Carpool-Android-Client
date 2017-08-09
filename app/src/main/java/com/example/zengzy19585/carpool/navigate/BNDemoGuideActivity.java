@@ -17,6 +17,15 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.map.MapStatus;
+import com.baidu.mapapi.map.MapStatusUpdateFactory;
+import com.baidu.mapapi.map.MyLocationConfiguration;
+import com.baidu.mapapi.map.MyLocationData;
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.navisdk.adapter.BNRouteGuideManager;
 import com.baidu.navisdk.adapter.BNRouteGuideManager.CustomizedLayerItem;
 import com.baidu.navisdk.adapter.BNRouteGuideManager.OnNavigationListener;
@@ -48,10 +57,25 @@ public class BNDemoGuideActivity extends Activity {
 	private BaiduNaviCommonModule mBaiduNaviCommonModule = null;
 	private String call_serial, rec_mobile_num;
 	private String serialNum;
+	private SharedPreferencesUtil userInfo;
+    // 定位相关
+    LocationClient mLocClient;
+    public MyLocationListenner myListener = new MyLocationListenner();
+    private MyLocationConfiguration.LocationMode mCurrentMode;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		userInfo = new SharedPreferencesUtil(getApplicationContext(), "userInfo");
+        // 定位初始化
+        mLocClient = new LocationClient(this);
+        mLocClient.registerLocationListener(myListener);
+        LocationClientOption option = new LocationClientOption();
+        option.setOpenGps(true); // 打开gps
+        option.setCoorType("bd09ll"); // 设置坐标类型
+        option.setScanSpan(2000);
+        mLocClient.setLocOption(option);
+        mLocClient.start();
 
 		createHandler();
 		View view = null;
@@ -323,6 +347,47 @@ public class BNDemoGuideActivity extends Activity {
 					});
 				}
 			});
+		}
+	}
+
+	private void updateDriverLoc(final LatLng latLng){
+		if(!userInfo.getStringValue("userType").equals("driver")){
+			return;
+		}
+		AsyncHttpClient client = new AsyncHttpClient();
+		RequestParams params = new RequestParams();
+		params.put("mobile_number", userInfo.getStringValue("userName"));
+		params.put("lat", String.valueOf(latLng.latitude));
+		params.put("lng", String.valueOf(latLng.longitude));
+		String url = "http://23.83.250.227:8080/driver//updating-driver-loc.do";
+		client.post(url, params, new AsyncHttpResponseHandler() {
+			@Override
+			public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+			}
+
+			@Override
+			public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+				Toast.makeText(getApplicationContext(), "同步位置失败！", Toast.LENGTH_SHORT).show();
+			}
+		});
+	}
+
+	/**
+	 * 定位SDK监听函数
+	 */
+	private class MyLocationListenner implements BDLocationListener {
+
+		@Override
+		public void onConnectHotSpotMessage(String s, int i) {
+
+		}
+
+		@Override
+		public void onReceiveLocation(BDLocation location) {
+			updateDriverLoc(new LatLng(location.getLatitude(), location.getLongitude()));
+		}
+
+		public void onReceivePoi(BDLocation poiLocation) {
 		}
 	}
 }
