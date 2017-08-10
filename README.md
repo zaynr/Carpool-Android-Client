@@ -29,12 +29,15 @@
 在数据库内已经预留了测试账号，乘客与司机的账号密码均为 “123”。
 
 ### 好友
+![](http://oud04ioid.bkt.clouddn.com/image/carpool/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170810205643.jpg)
+
 由于时间关系，乘客端未添加好友验证模块，添加好友不需要对方同意即可完成。乘客的添加好友点击右下角按钮即可。
 
 司机端的常客列表由服务次数进行降序排列。
 
 ### 个人数据更新
 <img src="http://oud04ioid.bkt.clouddn.com/image/carpool/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170810205645.jpg" alt="Drawing" style="width: 100px;"/>
+![](http://oud04ioid.bkt.clouddn.com/image/carpool/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170810205629.jpg)
 <img src="http://oud04ioid.bkt.clouddn.com/image/carpool/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170810205639.jpg" alt="Drawing" style="width: 100px;"/>
 
 可进入“账户中心”对个人基本数据进行更新，同时提供密码的更新。
