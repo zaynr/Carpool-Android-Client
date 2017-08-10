@@ -35,7 +35,7 @@
 
 ### 个人数据更新
 <img src="http://oud04ioid.bkt.clouddn.com/image/carpool/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170810205645.jpg" alt="Drawing" style="width: 100px;"/>
-<img src="http://oud04ioid.bkt.clouddn.com/image/carpool/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170810205629.jpg" alt="Drawing" style="width: 100px;"/>
+<img src="http://oud04ioid.bkt.clouddn.com/image/carpool/%E5%BE%AE%E4%BF%A1%E5%9B%BE%E7%89%87_20170810205639.jpg" alt="Drawing" style="width: 100px;"/>
 
 可进入“账户中心”对个人基本数据进行更新，同时提供密码的更新。
 
