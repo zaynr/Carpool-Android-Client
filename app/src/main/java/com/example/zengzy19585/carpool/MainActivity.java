@@ -161,11 +161,18 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 if(userInfo.getStringValue("userType").equals("customer")) {
-                    Intent intent = new Intent(getApplication(), ImmediateCallActivity.class);
-                    intent.putExtra("curLat", mCurrentLat);
-                    intent.putExtra("curLng", mCurrentLon);
-                    startActivity(intent);
-                    onPause();
+                    if(userInfo.getStringValue("callStatus").contains("immediatePlace")) {
+                        Intent intent = new Intent(getApplication(), OrdersManageActivity.class);
+                        startActivity(intent);
+                        onPause();
+                    }
+                    else {
+                        Intent intent = new Intent(getApplication(), ImmediateCallActivity.class);
+                        intent.putExtra("curLat", mCurrentLat);
+                        intent.putExtra("curLng", mCurrentLon);
+                        startActivity(intent);
+                        onPause();
+                    }
                 }
                 else if(userInfo.getStringValue("userType").equals("driver")) {
                     Intent intent = new Intent(getApplication(), ReceivingOrdersActivity.class);
@@ -287,13 +294,26 @@ public class MainActivity extends AppCompatActivity
                 onPause();
             }
         } else if (id == R.id.nav_friends) {
-            Intent intent = new Intent(this, FriendManageActivity.class);
-            startActivity(intent);
-            onPause();
+            if(userInfo.getStringValue("userStatus").contains("loggedIn")) {
+                Intent intent = new Intent(this, FriendManageActivity.class);
+                startActivity(intent);
+                onPause();
+            }
+            else {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                onPause();
+            }
         } else if (id == R.id.nav_manage) {
-            Intent intent = new Intent(this, OrdersManageActivity.class);
-            startActivity(intent);
-            onPause();
+            if(userInfo.getStringValue("userStatus").contains("loggedIn")) {
+                Intent intent = new Intent(this, OrdersManageActivity.class);
+                startActivity(intent);
+                onPause();
+            } else {
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+                onPause();
+            }
         } else if (id == R.id.nav_share) {
             Intent it = new Intent(Intent.ACTION_SEND);
             it.putExtra(Intent.EXTRA_TEXT, "Zayn 的拼车 APP, 欢迎试用: https://github.com/zaynr/Carpool-Android-Client.git");
