@@ -1,6 +1,9 @@
 package com.example.zengzy19585.carpool;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -65,6 +68,8 @@ public class MainActivity extends AppCompatActivity
     private double mCurrentLat = 0.0;
     private double mCurrentLon = 0.0;
     private float mCurrentAccracy;
+    private static final int ACCESS_COARSE_LOCATION =100;
+    private static final int ACCESS_FINE_LOCATION =101;
 
     MapView mMapView;
     BaiduMap mBaiduMap;
@@ -231,6 +236,17 @@ public class MainActivity extends AppCompatActivity
 
             }
         });
+
+        Context mContext = MainActivity.this;
+
+        if(mContext.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
+            requestPermissions( new String[] { Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_COARSE_LOCATION);
+        }
+        if(mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
+            requestPermissions( new String[] { Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
+        }
     }
 
     public void startLocating(){
