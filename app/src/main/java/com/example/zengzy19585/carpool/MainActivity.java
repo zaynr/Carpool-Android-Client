@@ -241,11 +241,13 @@ public class MainActivity extends AppCompatActivity
 
         if(mContext.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
-            requestPermissions( new String[] { Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_COARSE_LOCATION);
+            Toast.makeText(getApplicationContext(), "请打开定位权限！", Toast.LENGTH_SHORT).show();
+            finish();
         }
         if(mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
-            requestPermissions( new String[] { Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
+            Toast.makeText(getApplicationContext(), "请打开定位权限！", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
