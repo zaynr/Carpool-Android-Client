@@ -277,15 +277,17 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
             }
 
             public void initSuccess() {
+                Toast.makeText(ReceivingOrdersActivity.this, "初始化成功", Toast.LENGTH_SHORT).show();
                 hasInitSuccess = true;
                 initSetting();
             }
 
             public void initStart() {
+                Toast.makeText(ReceivingOrdersActivity.this, "初始化开始", Toast.LENGTH_SHORT).show();
             }
 
             public void initFailed() {
-                Toast.makeText(ReceivingOrdersActivity.this, "百度导航引擎初始化失败", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ReceivingOrdersActivity.this, "初始化失败", Toast.LENGTH_SHORT).show();
             }
 
         }, null, ttsHandler, ttsPlayStateListener);
