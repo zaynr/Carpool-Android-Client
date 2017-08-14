@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.util.Log;
@@ -241,11 +242,34 @@ public class MainActivity extends AppCompatActivity
 
         if(mContext.checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
-            Toast.makeText(getApplicationContext(), "请打开定位权限！", Toast.LENGTH_SHORT).show();
+            requestPermissions( new String[] { Manifest.permission.ACCESS_COARSE_LOCATION}, ACCESS_COARSE_LOCATION);
         }
         if(mContext.checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // 申请一个（或多个）权限，并提供用于回调返回的获取码（用户定义）
-            Toast.makeText(getApplicationContext(), "请打开定位权限！", Toast.LENGTH_SHORT).show();
+            requestPermissions( new String[] { Manifest.permission.ACCESS_FINE_LOCATION}, ACCESS_FINE_LOCATION);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case ACCESS_COARSE_LOCATION:
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 获取到权限，作相应处理（调用定位SDK应当确保相关权限均被授权，否则可能引起定位失败）
+                } else{
+                    // 没有获取到权限，做特殊处理
+                }
+                break;
+            case ACCESS_FINE_LOCATION:
+                if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 获取到权限，作相应处理（调用定位SDK应当确保相关权限均被授权，否则可能引起定位失败）
+                } else{
+                    // 没有获取到权限，做特殊处理
+                }
+                break;
+            default:
+                break;
         }
     }
 
