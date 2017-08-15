@@ -78,7 +78,6 @@ public class DriverDetail extends AppCompatActivity implements OnGetRoutePlanRes
     private int mCurrentDirection = 0;
     private double mCurrentLat = 0.0;
     private double mCurrentLon = 0.0;
-    private float mCurrentAccracy;
     private LatLng ori, dest;
     private RouteLine route = null;
     private ArrayList<LatLng> latlngs;
@@ -88,6 +87,7 @@ public class DriverDetail extends AppCompatActivity implements OnGetRoutePlanRes
 
     // UI相关
     boolean isFirstLoc = true; // 是否首次定位
+    boolean isAddedMarker = false;
     private MyLocationData locData;
     // 搜索相关
     private RoutePlanSearch mSearchRoute = null;
@@ -407,15 +407,30 @@ public class DriverDetail extends AppCompatActivity implements OnGetRoutePlanRes
                     public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                         try {
                             JSONObject object = new JSONObject(new String(responseBody));
-                            LatLng latLng = new LatLng(object.getDouble("lat"), object.getDouble("lng"));
-                            latlngs.add(latLng);
+                            final LatLng latLng = new LatLng(object.getDouble("lat"), object.getDouble("lng"));
                             //add car overlay
-                            OverlayOptions markerOptions;
-                            markerOptions = new MarkerOptions().flat(true).anchor(0.5f, 0.5f)
-                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow)).position(latlngs.get(0))
-                                    .rotate((float) getAngle(0));
-                            mMoveMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
-                            moveLooper();
+                            if(!isAddedMarker) {
+                                OverlayOptions markerOptions;
+                                markerOptions = new MarkerOptions().flat(true).anchor(0.5f, 0.5f)
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.arrow)).position(latLng)
+                                        .rotate((float) getAngle(0));
+                                mMoveMarker = (Marker) mBaiduMap.addOverlay(markerOptions);
+                                isAddedMarker = true;
+                            }
+                            final LatLng temp = mMoveMarker.getPosition();
+                            mMoveMarker
+                                    .setPosition(latLng);
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    // refresh marker's rotate
+                                    if (mMapView == null) {
+                                        return;
+                                    }
+                                    mMoveMarker.setRotate((float) getAngle(latLng,
+                                            temp));
+                                }
+                            });
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
