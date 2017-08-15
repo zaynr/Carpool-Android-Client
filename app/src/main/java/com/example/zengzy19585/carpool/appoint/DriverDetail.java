@@ -356,11 +356,6 @@ public class DriverDetail extends AppCompatActivity implements OnGetRoutePlanRes
     private class MyLocationListenner implements BDLocationListener {
 
         @Override
-        public void onConnectHotSpotMessage(String s, int i) {
-
-        }
-
-        @Override
         public void onReceiveLocation(BDLocation location) {
             if(preferencesUtil.getStringValue("callStatus").contains("immediatePlace")) {
                 AsyncHttpClient client = new AsyncHttpClient();

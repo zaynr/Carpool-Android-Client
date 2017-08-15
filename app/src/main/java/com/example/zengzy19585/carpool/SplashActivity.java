@@ -12,9 +12,8 @@ import android.widget.Toast;
 public class SplashActivity extends AppCompatActivity {
 
 
-    private static final String[] authBaseArr = { Manifest.permission.WRITE_EXTERNAL_STORAGE,
-            Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.MOUNT_UNMOUNT_FILESYSTEMS };
+    private static final String[] authBaseArr = { Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.READ_PHONE_STATE };
     private static final int authBaseRequestCode = 1;
 
     private boolean hasCompletePhoneAuth() {

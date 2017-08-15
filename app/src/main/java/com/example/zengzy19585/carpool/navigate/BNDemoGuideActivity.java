@@ -378,11 +378,6 @@ public class BNDemoGuideActivity extends Activity {
 	private class MyLocationListenner implements BDLocationListener {
 
 		@Override
-		public void onConnectHotSpotMessage(String s, int i) {
-
-		}
-
-		@Override
 		public void onReceiveLocation(BDLocation location) {
 			updateDriverLoc(new LatLng(location.getLatitude(), location.getLongitude()));
 		}

@@ -56,9 +56,9 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
     private static final String APP_FOLDER_NAME = "Carpool";
     private String mSDCardPath = null;
     public static final String ROUTE_PLAN_NODE = "routePlanNode";
-    private static final String[] authBaseArr = { Manifest.permission.WRITE_EXTERNAL_STORAGE,
+    private static final String[] authBaseArr = { Manifest.permission.READ_PHONE_STATE,
             Manifest.permission.ACCESS_FINE_LOCATION };
-    private static final String[] authComArr = { Manifest.permission.READ_PHONE_STATE };
+    private static final String[] authComArr = { Manifest.permission.WRITE_EXTERNAL_STORAGE };
     private static final int authBaseRequestCode = 1;
     private static final int authComRequestCode = 2;
     private boolean hasInitSuccess = false;
@@ -277,13 +277,11 @@ public class ReceivingOrdersActivity extends AppCompatActivity {
             }
 
             public void initSuccess() {
-                Toast.makeText(ReceivingOrdersActivity.this, "初始化成功", Toast.LENGTH_SHORT).show();
                 hasInitSuccess = true;
                 initSetting();
             }
 
             public void initStart() {
-                Toast.makeText(ReceivingOrdersActivity.this, "初始化开始", Toast.LENGTH_SHORT).show();
             }
 
             public void initFailed() {

@@ -337,11 +337,6 @@ public class MainActivity extends AppCompatActivity
     private class MyLocationListenner implements BDLocationListener {
 
         @Override
-        public void onConnectHotSpotMessage(String s, int i) {
-
-        }
-
-        @Override
         public void onReceiveLocation(BDLocation location) {
             // map view 销毁后不在处理新接收的位置
             if (location == null || mMapView == null) {
